@@ -9,6 +9,12 @@ __pycache__/
 #macOS
 .DS_Store
 
+#pycharm
+*iml
+.idea
+.classpath
+.project
+
 # Distribution / packaging
 .Python
 build/
