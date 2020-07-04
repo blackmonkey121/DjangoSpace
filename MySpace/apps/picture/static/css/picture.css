@@ -1,0 +1,106 @@
+
+/* 相册公有的样式   */
+
+#main-left{
+    width: 20%;
+    height: 100%;
+    position: fixed;
+}
+
+#main-right{
+    width: 80%;
+    height: 100px;
+}
+
+#background{
+    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),url("../img/picture-background.jpg");
+}
+
+
+/* 侧边列表 */
+
+#picture-menu{
+    margin-top: 100px;
+}
+
+#picture-menu li{
+    color: #666;
+    background-image: url("../img/bar.png");
+    background-repeat: no-repeat;
+    font-size: 20px;
+    height: 40px;
+    margin-bottom: 2px;
+    padding: 10px 0 0 14px;
+}
+
+#picture-menu li:hover{
+    color: deeppink;
+    opacity: 0.5;
+}
+#picture-menu .picture-title{
+    color: black;
+}
+
+/* 主体 */
+
+.picture-self{
+    height: 330px;
+    margin-right: 14px;
+}
+.picture-self .img-border{
+    border: 8px solid white;
+    border-radius: 4px 0 0 4px;
+    box-shadow: -5px 5px 9px 0 #8a88ad;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.picture-msg{
+    display: inline-block;
+    position: absolute;
+    background: rgba(255,255,255,0.6);
+    padding: 10px;
+    height: 238px;
+    width: 800px;
+}
+
+.picture-self img{
+    transition: all .5s ease-in-out;
+    display: inline-block;
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.picture-self img:hover{
+    -webkit-transform: scale(1.2);
+    -moz-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+    -o-transform: scale(1.1);
+    transform: scale(1.2);
+    opacity: 1;
+}
+
+.picture-msg .title{
+    border-bottom: 4px solid #eee;
+    display: inline-block;
+    font-size:24px;
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+    color: #5bc0de;
+}
+
+.picture-msg .desc{
+    text-indent: 2em;
+    line-height: 24px;
+    font-weight: 300;
+    color: rgba(0, 0, 0, 0.8);
+}
+.picture-msg .footer{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    color: rgba(0, 0, 0, 0.6);
+    font-weight: 300;
+}
+
+

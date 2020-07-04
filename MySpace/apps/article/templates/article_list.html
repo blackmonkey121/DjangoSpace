@@ -1,0 +1,59 @@
+{% extends 'article_base.html' %}
+
+{% block title %}
+    博客列表页
+{% endblock %}
+
+{% block article-css %}
+
+{% endblock %}
+
+{% block main-center %}
+
+    <div id="article-list">
+
+        <div>每日寄语：专注是一种习惯！</div>
+
+        {% for article in article_list %}
+
+            <div class="article clearfix">
+
+                <div class="title">
+                    <a href="{% url "article:detail" article.id %}">{{ article.title }}</a>
+                </div>
+
+                <div class="summary para">
+
+                    <span>摘要:</span>
+                    {{ article.desc | truncatechars:120 }}
+                </div>
+
+                <div class="footer float-r">
+
+                    <span class="head-tip">作者</span><span class="author end-tip">Clark Monkey</span>
+                    <span class="head-tip">发布于</span><span class="release end-tip">{{ article.create_time }}</span>
+                    <span class="head-tip">分类</span><span class="category end-tip">{{ article.category }}</span>
+                    <span class="head-tip">阅览</span><span class="category end-tip">{{ article.visit }}</span>
+
+                </div>
+
+
+            </div>
+
+        {% empty %}
+            <div class="article">
+                <p class="title">
+                    空空如也！
+                </p>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% endblock %}
+
+
+{% block article-js %}
+
+{% endblock %}

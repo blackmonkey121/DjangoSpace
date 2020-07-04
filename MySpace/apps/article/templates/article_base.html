@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static '/css/article.css' %}">
+
+    {% block article-css %}
+
+    {% endblock %}
+{% endblock %}
+
+{% block main %}
+    <div id="container" class="clearfix">
+
+        <div id="main-left" class="float-l">
+            {% block main-left %}
+
+            {% endblock %}
+
+        </div>
+
+        <div id="main-center" class="float-l">
+            {% block main-center %}
+
+            {% endblock %}
+
+        </div>
+
+        <div id="main-right" class="float-r">
+            {% block main-right %}
+
+            {% endblock %}
+
+        </div>
+
+    </div>
+
+    <div id="page">
+        {% if page_obj %}
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
+            {% endif %}
+
+            第{{ page_obj.number }}页 共{{ paginator.num_pages }}页
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+            {% endif %}
+        {% endif %}
+    </div>
+
+
+{% endblock %}
+
+{% block js %}
+    {% block article-js %}
+
+    {% endblock %}
+{% endblock %}

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}
+
+    {% endblock %}</title>
+
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+
+    {% block css %}
+
+    {% endblock %}
+
+</head>
+<body>
+
+<div id='menu'>
+    <ul>
+        <li><a href='{% url 'home:home' %}'>Home</a></li>
+        <li><a href='{% url 'picture:album' %}'>相册</a></li>
+        <li class='has-sub'><a href='{% url 'life:book_list' %}'>生活</a>
+            <ul>
+                <li><a href='{% url 'life:book_list' %}'>书架</a></li>
+                <li><a href='{% url 'life:note_list' %}'>随笔</a></li>
+                <li><a href='{% url 'life:perception_list' %}'>感悟</a></li>
+                <li><a href='{% url 'life:cook_list' %}'>烹饪</a></li>
+            </ul>
+        </li>
+        <li class='has-sub'><a href=''>分类</a>
+            <ul>
+                {% for category in category_list %}
+                    <li><a href='{% url 'article:category' category.id %}'>{{ category.name }}</a></li>
+                {% endfor %}
+
+
+            </ul>
+        </li>
+        <li class='has-sub'><a href=''>标签</a>
+            <ul>
+                {% for tag in tag_list %}
+                    <li><a href="{% url 'article:tag' tag.id %}">{{ tag.name }}</a></li>
+                {% endfor %}
+
+            </ul>
+        </li>
+        <li class='has-sub'><a href=''>归档</a>
+
+
+            <ul>
+                {% for year, months in date_merge.items %}
+
+                    <li class='has-sub'><a href="{% url 'article:archive' year 0 %}">{{ year }}年</a>
+                        <ul>
+                            {% for month in months %}
+                            <li><a href="{% url 'article:archive' year month %}">{{ month }} 月</a></li>
+                                {% endfor %}
+                        </ul>
+                    </li>
+
+
+
+                {% endfor %}
+            </ul>
+        </li>
+        <li class='has-sub'><a href='{% url 'travel:travel' %}'>足迹</a>
+            <ul>
+                {% for province in province_list%}
+                    <li class='has-sub'><a href='{% url 'travel:province' province.id %}'>{{ province.name }}</a>
+
+                        <ul>
+                            {% for city in province.city %}
+                                <li><a href='{% url 'travel:city' province.id city.id %}'>{{ city.name }}</a></li>
+
+                            {% endfor %}
+
+                        </ul>
+
+
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+        </li>
+
+
+        <li><a href='{% url 'home:me' %}'>关于我</a></li>
+        <li><a href='/admin/'>管理</a></li>
+        <li><a href='https://github.com/blackmonkey121'>git</a></li>
+        <li><a href="{% url 'rss' %}">RSS</a></li>
+    </ul>
+</div>
+
+{% block main %}
+
+{% endblock %}
+
+<div id="background"></div>
+
+<script src="{% static '/js/jquery.min.js' %}"></script>
+<script src="{% static '/js/navbar.js' %}"></script>
+
+{% block js %}
+
+{% endblock %}
+
+</body>
+</html>

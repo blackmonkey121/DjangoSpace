@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Monkey的旅行
+{% endblock %}
+
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static '/css/travel.css' %}">
+
+    {% block life-css %}
+
+    {% endblock %}
+{% endblock %}
+
+{% block main %}
+    <div id="container" class="clearfix">
+
+
+        <div id="main-left" class="float-l">
+            {% block main-left %}
+
+            {% endblock %}
+
+        </div>
+        <div id="main-right" class="float-r">
+            {% block main-right %}
+
+            {% endblock %}
+
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block js %}
+    {% block life-js %}
+
+    {% endblock %}
+{% endblock %}

@@ -1,0 +1,17 @@
+
+/* 生活公有的样式   */
+
+#main-left{
+    width: 20%;
+    height: 100%;
+    position: fixed;
+}
+
+#main-right{
+    width: 80%;
+    height: 100px;
+}
+
+#background{
+    background-image: url("../img/travel-background.jpg");
+}

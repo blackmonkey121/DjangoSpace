@@ -1,0 +1,74 @@
+{% extends 'picture_base.html' %}
+
+{% block picture-css %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/picture.css' %}">
+{% endblock %}
+
+
+{% block main-left %}
+    <div id="picture-index">
+
+        <ul id="picture-menu">
+            {% for album in album_list %}
+                <li class="picture-line">
+                    <a href=""><span>{{ album.name }}{{ album.imgs_count }}</span></a>
+                </li>
+            {% endfor %}
+
+        </ul>
+
+    </div>
+    <span id="chen"></span>
+{% endblock %}
+
+
+{% block main-right %}
+    <div id="picture-body">
+        <div id="picture-list" class="clearfix">
+            {% for album in album_list %}
+                <div class="picture-self">
+
+                    <div class="img-border">
+                        <a href="">
+                            <img src="/media/{{ album.cover }}" alt="">
+                        </a>
+                    </div>
+                    <div class="picture-msg">
+
+                        <div class="title">{{ album.name }}({{ album.img_count }})</div>
+                        <div class="desc">{{ album.desc | truncatechars:140 }}</div>
+                        <div class="footer">
+                            <span class="time">时间:{{ album.create_time }}</span>
+                            <span class="visit">访问:{{ album.visit }}</span>
+                        </div>
+                    </div>
+
+
+                </div>
+            {% endfor %}
+
+
+        </div>
+
+    </div>
+
+    <div id="page">
+        {% if page_obj %}
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
+            {% endif %}
+
+            第{{ page_obj.number }}页 共{{ paginator.num_pages }}页
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+            {% endif %}
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+{% block picture-js %}
+
+{% endblock %}

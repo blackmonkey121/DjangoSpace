@@ -1,0 +1,61 @@
+{% extends 'article_base.html' %}
+
+
+{% block title %}
+    详情页:{{ article.title }}
+{% endblock %}
+
+
+{% load static %}
+
+{% block article-css %}
+    <link rel="stylesheet" href="{% static 'css/googlecode.css' %}">
+{% endblock %}
+
+
+
+{% block main-center %}
+    <div id="article-detail">
+
+        <div id="article-title">
+            {{ article.title }}
+        </div>
+
+        <div id="article-decoration">
+
+            <div id="cookies">
+                <span class="tip c-black b-white">原创</span>
+                <span class="tip c-black b-white">分类</span><span
+                    class="tip b-error c-white">{{ article.category }}</span>
+                <span class="tip c-black b-white">发布</span><span
+                    class="tip b-info c-white">{{ article.create_time }}</span>
+                <span class="tip c-black b-white">阅读</span><span
+                    class="tip b-warning c-white">{{ article.visit }}</span>
+
+            </div>
+            <div id="tag" class="float-r">
+                <span class="tip b-info">Tags</span> <i></i>
+
+                {% for tag in article.tag.all %}
+                    <span class="">{{ tag.name }}</span> <i></i>
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <div id="article-text" class="para">
+            {{ article.content_html | safe }}
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block article-js %}
+    <script src="{% static 'js/highlight.min.js' %}"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="{% static 'js/detail.js' %}"></script>
+{% endblock %}
+
+
+

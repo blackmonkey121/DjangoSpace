@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Monkey的个人站点
+{% endblock %}
+
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static '/css/home.css' %}">
+
+    <!--    Carousel-->
+    <link rel="stylesheet" href="{% static '/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static '/css/animate.css' %}">
+    <link rel="stylesheet" href="{% static '/css/slick.css' %}">
+    <link rel="stylesheet" href="{% static '/css/index.css' %}">
+    <link rel="stylesheet" href="{% static '/css/jquery.fullPage.css' %}">
+
+{% endblock %}
+
+{% block main %}
+
+<div id="index_main" class="index_main">
+    <!--导航-->
+    <div class="section section1">
+        <div class="index_banner">
+            <div class="item">
+                <div class="items scaleBg" style="background-image: url('{% static '/img/banner1.jpg' %}');"></div>
+                <div class="inner">
+                    <div class="block_txt">
+                        <h4>With Dream, Focus On Life!</h4>
+                        <h2><a href="">Picture:</a> 怀揣<span>梦想</span> | 专注 <span> 生活</span></h2>
+                        <h3>
+                            <div style="text-align:center;margin:50px 0; font:normal 14px/24px 'MicroSoft YaHei';">
+                                <p>欢迎来到我的个人站点，我是 Clark·Monkey</p>
+                                <p>特别鸣谢<a href="https://camarts.app/" target="_blank">Dandy Weng</a></p>
+                            </div>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="items scaleBg" style="background-image: url('{% static '/img/banner2.jpg' %}');"></div>
+                <div class="inner">
+                    <div class="block_txt">
+                        <h4> Goodliness,to be continued</h4>
+                        <h2><a href="">Life:</a> 让<span>美好持续</span>发生</h2>
+                        <h3>保持微笑，保持热泪盈眶的真实～</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="items scaleBg" style="background-image: url('{% static '/img/banner3.jpg' %}');"></div>
+                <div class="inner">
+                    <div class="block_txt">
+                        <h4>Do one thing and do it well！</h4>
+                        <h2><a href="">Technology：</a>每次<span>只做一件事</span>把它做到极致。</h2>
+                        <h3>——最不务正业的Coder.</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="items scaleBg" style="background-image: url('{% static '/img/banner4.jpg' %}');"></div>
+                <div class="inner">
+                    <div class="block_txt">
+                        <h4>Life is a journey, enjoy every encounter and parting.</h4>
+                        <h2><a href="">Travel:</a> 不知风云 <span> 起落</span> ｜ 只见 <span>行色匆匆</span></h2>
+                        <h3>一直在路上</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="items scaleBg" style="background-image: url('{% static '/img/banner5.jpg' %}');"></div>
+                <div class="inner">
+                    <div class="block_txt">
+                        <h4>About Me</h4>
+                        <h2><a href="">About Me:</a> 关于 <span>我</span></h2>
+                        <h3>工作、学习、生活、个人自述</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="left slick_txt">
+            <div class="prev slick_arrow"></div>
+        </div>
+        <div class="right slick_txt">
+            <div class="next slick_arrow"></div>
+        </div>
+        <div class="number">
+            <div class="inner clearfix">
+                <span class="active">相册</span>
+                <span>生活</span>
+                <span>技术</span>
+                <span>足迹</span>
+                <span>关于我</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section section2">
+        <div id="home-picture" class="clearfix">
+
+            <div class="desc">
+                <br>
+                这些多是一些好友和同事的照片，也有一部分是旅程中拍下的风景...
+                <br>
+                它们有些配有说明文字，我希望通过这些来记录生活中那些有熟悉的面孔和有趣的灵魂...
+                <br>时间太匆匆，
+                我们即是在遇见，也是在走散...
+                <br>
+                无论庆幸或遗憾，总之结局总是美好的，无论如何感谢经历...
+            </div>
+
+            <a style="text-decoration:none;" href="{% url 'picture:album' %}"><span id="picture-btn" class="page-btn">相册</span></a>
+
+            <div id="picture-area" class="clearfix">
+
+                <div class="img">
+                    <img src="{% static 'img/home_background.jpg' %}" alt="">
+                </div>
+                <div class="img">
+                    <img src="{% static 'img/home_background.jpg' %}" alt="">
+                </div>
+                <div class="img">
+                    <img src="{% static 'img/home_background.jpg' %}" alt="">
+                </div>
+                <div class="img">
+                    <img src="{% static 'img/home_background.jpg' %}" alt="">
+                </div>
+                <div class="img">
+                    <img src="{% static 'img/home_background.jpg' %}" alt="">
+                </div>
+                <div class="img">
+                    <img src="{% static 'img/home_background.jpg' %}" alt="">
+                </div>
+                <div class="img">
+                    <img src="{% static 'img/home_background.jpg' %}" alt="">
+                </div>
+                <div class="img">
+                    <img src="{% static 'img/home_background.jpg' %}" alt="">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="section section3">
+
+        <div id="home-article" class="clearfix">
+            <a style="text-decoration:none;" href="{% url 'article:article' %}"><span id="article-btn" class="page-btn">博文</span></a>
+            <div class="article-block hot">
+                <div class="block-name">最热文章</div>
+                <ul>
+                    <li><a href="#">Python中 re 的过程</a></li>
+                    <li><a href="#">JVM 底层原理</a></li>
+                    <li><a href="#">微服务概述</a></li>
+                    <li><a href="#">Django 框架</a></li>
+                    <li><a href="#">Flask的过程</a></li>
+                    <li><a href="#">C++的过程</a></li>
+                </ul>
+            </div>
+            <div class="article-block new">
+                <div class="block-name">最新文章</div>
+                <ul>
+                    <li><a href="#">Python中 re 的过程</a></li>
+                    <li><a href="#">JVM 底层原理</a></li>
+                    <li><a href="#">微服务概述</a></li>
+                    <li><a href="#">Django 框架</a></li>
+                    <li><a href="#">Flask的过程</a></li>
+                    <li><a href="#">C++的过程</a></li>
+
+                </ul>
+            </div>
+            <div class="article-block featured">
+                <div class="block-name">每日推文</div>
+                <ul>
+                    <li><a href="#">Python中 re 的过程</a></li>
+                    <li><a href="#">JVM 底层原理</a></li>
+                    <li><a href="#">微服务概述</a></li>
+                    <li><a href="#">Django 框架</a></li>
+                    <li><a href="#">Flask的过程</a></li>
+                    <li><a href="#">C++的过程</a></li>
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="section section4">
+        <div id="home-life">
+            <span class="page-btn"><a style="text-decoration:none;" href="{% url 'life:life' %}">生活</a></span>
+            <div class="desc">
+                无论发生什么，世界还是那个样子——时光如水，从容依旧。 从不因为任何人或事而稍做停歇......
+                <br>
+                拼命的追逐着，不停的忙碌着。想来，这世间有许多人与我一样，踽踽独行于红尘巷陌。
+                <br>
+                <br>
+                保持乐观积极的态度，抽时间 <span><a href="#">读一读书</a></span>，也给疲惫的心灵放个假。
+                <br>
+                健康是最宝贵的财富，因此要坚持 <span><a href="#">运动</a></span>。
+                <br>
+                一定早睡和按时吃饭，最好自己动手，不要给不吃饭找一堆幼稚的理由～<span><a href="#">享受烹饪的快乐</a>～</span>
+                <br>
+                <span><a href="#">编程</a></span>不仅仅只是工作，而是 <span><a href="">兴趣和爱好</a></span>，它可以让我专注于某一点～我很享受这个过程～
+                <br>
+                不要将糟糕的事情持续太久 <span><a href="#">Do At Once!</a></span>，做事要专注并且追求高质高效，不要那些没有意义的事情。
+
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="section section5">
+
+        <a style="text-decoration:none;" href="{% url 'travel:travel' %}"><span class="page-btn">足迹</span></a>
+        <ul>
+
+        </ul>
+        <div id="home-me">
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+    <script src="{% static '/js/carousel/jquery.fullPage.min.js' %}"></script>
+<script src="{% static '/js/carousel/index_slick.js' %}"></script>
+<script src="{% static '/js/carousel/index.js' %}"></script>
+
+{% endblock %}

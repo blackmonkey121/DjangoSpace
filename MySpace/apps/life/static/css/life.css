@@ -1,0 +1,16 @@
+/* 生活公有的样式   */
+
+#main-left{
+    width: 20%;
+    height: 100%;
+    position: fixed;
+}
+
+#main-right{
+    width: 80%;
+    height: 100px;
+}
+
+#background{
+    background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),url("../img/life-background.jpg");
+}
