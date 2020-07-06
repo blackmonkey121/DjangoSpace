@@ -1,11 +1,5 @@
 {% extends 'picture_base.html' %}
 
-{% block picture-css %}
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/picture.css' %}">
-{% endblock %}
-
-
 {% block main-left %}
     <div id="picture-index">
 
@@ -22,7 +16,6 @@
     <span id="chen"></span>
 {% endblock %}
 
-
 {% block main-right %}
     <div id="picture-body">
         <div id="picture-list" class="clearfix">
@@ -30,7 +23,7 @@
                 <div class="picture-self">
 
                     <div class="img-border">
-                        <a href="">
+                        <a href="{% url 'picture:album_detail' album.id %}">
                             <img src="/media/{{ album.cover }}" alt="">
                         </a>
                     </div>

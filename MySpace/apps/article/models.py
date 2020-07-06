@@ -1,7 +1,5 @@
 from django.db import models
-# Create your models here.
 from django.utils.safestring import mark_safe
-from django.core.cache import cache
 
 import mistune
 from mdeditor.fields import MDTextField
@@ -9,35 +7,36 @@ from mdeditor.fields import MDTextField
 from ..utils.basemodel import VisitBaseModel, BaseModel
 
 
-
 class Category(BaseModel):
+
+    cache_list: list = [
+        'context:category:list',
+    ]
 
     name = models.CharField(max_length=50, verbose_name="名称")
 
-    class Meta:
-        verbose_name = verbose_name_plural = "分类"
-        ordering = ['-id', ]
-
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = verbose_name_plural = "分类"
+        # ordering = ['-id', ]
 
 
 class Tag(BaseModel):
 
     name = models.CharField(max_length=10, verbose_name="名称")
 
-    class Meta:
-        verbose_name = verbose_name_plural = "标签"
-        ordering = ['-id', ]
+    cache_list: list = [
+        'context:tag:list',
+    ]
 
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        """ 更新缓存 """
-        cache_key = 'context:%s:list' % self.__class__.__name__.lower()
-        cache.delete(cache_key)
-        super().save(*args, **kwargs)
+    class Meta:
+        verbose_name = verbose_name_plural = "标签"
+        ordering = ['-id', ]
 
 
 class Article(VisitBaseModel):

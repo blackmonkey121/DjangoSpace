@@ -7,7 +7,7 @@ from django.db.models import F
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from .models import Article
-from ..utils.mixin import NavViewMixin
+from ..utils.mixin import NavViewMixin, VisitIncrMixin
 import datetime
 
 
@@ -71,33 +71,12 @@ class ArchiveListView(ArticleView):
         return qs
 
 
-class ArticleDetailView(NavViewMixin, DetailView):
+class ArticleDetailView(NavViewMixin, VisitIncrMixin, DetailView):
     """  """
     pk_url_kwarg = 'id'
     model = Article
     template_name = 'article_detail.html'
 
-    def get(self, request, *args, **kwargs):
-
-        response = super().get(request, *args, **kwargs)
-        self.handle_visited(request)
-        return response
-
     def get_queryset(self):
 
         return Article.objects.all().select_related('category')
-
-    def handle_visited(self, request):
-        """"""
-        increase = False
-
-        uid = request.uid
-        visit_key = 'visit:{}:{}'.format(uid, self.request.path)
-
-        if not cache.get(visit_key):
-            increase = True
-            cache.set(visit_key, 1, 5 * 60)  # 5分钟
-
-        if increase:
-            # self.object.update(visit=F('visit') + 1)
-            Article.objects.filter(pk=self.object.id).update(visit=F('visit') + 1)
