@@ -11,7 +11,7 @@ from .models import Album, Image
 
 
 class ImageInline(object):
-    form_layout = (
+    form_layout: tuple = (
 
         Fieldset(
             '照片',
@@ -20,27 +20,27 @@ class ImageInline(object):
             Row('img',),
         ),
     )
-    extra = 2  # 控制额外多几个
-    model = Image
+    extra: int = 2  # 控制额外多几个
+    model: 'model.Model' = Image
 
 
 @xadmin.sites.register(Album)
 class AlbumAdmin(object):
 
-    form = AlbumAdminForm
+    form: 'FormModel' = AlbumAdminForm
 
-    inlines =[ImageInline, ]
+    inlines: (list, tuple) = [ImageInline, ]
 
-    list_display = ('name', 'desc', 'visit', 'create_time',
+    list_display: (list, tuple) = ('name', 'desc', 'visit', 'create_time',
                     'status', 'operator', 'image_count')
 
-    list_display_links = ['name']  # 在展示的字段上 添加的超链接
+    list_display_links: (list, tuple) = ['name']  # 在展示的字段上 添加的超链接
 
-    list_filter = ['create_time']  # 过滤字段
+    list_filter: (list, tuple) = ['create_time']  # 过滤字段
 
-    search_fields = ['name', 'desc']  # 检索的字段
+    search_fields: (list, tuple) = ['name', 'desc']  # 检索的字段
 
-    form_layout = (
+    form_layout: (list, tuple) = (
         Fieldset(
             '相册信息',
             Row('name',),
@@ -50,7 +50,7 @@ class AlbumAdmin(object):
         ),
     )
 
-    def operator(self, obj):
+    def operator(self, obj) -> str:
         """
         :param obj: 当前对象
         """
@@ -61,13 +61,9 @@ class AlbumAdmin(object):
 
     operator.short_description = '操作'
 
-    def image_count(self, obj, *args, **kwargs):
-        """
+    def image_count(self, obj, *args, **kwargs) -> int:
 
-        :return:
-
-        """
-        return obj.imagemanager_set.count()
+        return obj.image_set.count()
 
     image_count.short_description = '数量'
 
@@ -77,15 +73,15 @@ class ImageAdmin(object):
 
     form = ImageAdminForm
 
-    list_display = ('desc', 'visit', 'status', 'album', 'create_time', 'operator', )
+    list_display: (list, tuple) = ('name', 'album', 'visit', 'status', 'create_time', 'operator', )
 
-    list_display_links = ['name']  # 在展示的字段上 添加的超链接
+    list_display_links: (list, tuple) = ['name']  # 在展示的字段上 添加的超链接
 
-    list_filter = ['create_time']  # 过滤字段
+    list_filter: (list, tuple) = ['create_time']  # 过滤字段
 
-    search_fields = ['album', 'desc']  # 检索的字段
+    search_fields: (list, tuple) = ['album', 'desc']  # 检索的字段
 
-    form_layout = (
+    form_layout: (list, tuple) = (
         Fieldset(
             '相片信息',
             Row('status', 'visit'),
@@ -94,7 +90,7 @@ class ImageAdmin(object):
         ),
     )
 
-    def operator(self, obj):
+    def operator(self, obj) -> str:
         """
         :param obj: 当前对象
         """
@@ -104,4 +100,10 @@ class ImageAdmin(object):
         )
 
     operator.short_description = '操作'
+
+    def name(self, obj) -> str:
+        return '%s id:%s' % (obj.album.name, obj.id)
+
+    name.short_description = '名称'
+
 

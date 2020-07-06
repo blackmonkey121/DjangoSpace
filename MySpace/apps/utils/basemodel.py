@@ -3,15 +3,17 @@
 __author__ = "Monkey"
 
 from django.db import models
-from .tools import CacheMap
 
-class BaseModel(models.Model):
+from ..utils.mixin import FlushCacheMixin
 
-    STATUS_DRAFT = 2
-    STATUS_NORMAL = 1
-    STATUS_DELETE = 0
 
-    STATUS_ITEMS = (
+class BaseModel(FlushCacheMixin, models.Model):
+
+    STATUS_DRAFT: int = 2
+    STATUS_NORMAL: int = 1
+    STATUS_DELETE: int = 0
+
+    STATUS_ITEMS: (tuple, list) = (
         (STATUS_NORMAL, '发布'),
         (STATUS_DELETE, '删除'),
         (STATUS_DRAFT, '待发布'),
@@ -19,12 +21,6 @@ class BaseModel(models.Model):
 
     create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     status = models.PositiveIntegerField(default=STATUS_NORMAL, choices=STATUS_ITEMS, verbose_name="状态")
-
-    def save(self, *args, **kwargs):
-
-        CacheMap.delete(model=self.__class__)
-
-        super(BaseModel, self).save(*args, **kwargs)
 
     class Meta:
         abstract = True
