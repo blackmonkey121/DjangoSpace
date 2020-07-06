@@ -1,7 +1,7 @@
 asgiref==3.2.10
 defusedxml==0.6.0
 diff-match-patch==20181111
-Django==2.0.1
+Django==2.2.13
 django-autocomplete-light==3.5.1
 django-crispy-forms==1.9.1
 django-formtools==2.2
