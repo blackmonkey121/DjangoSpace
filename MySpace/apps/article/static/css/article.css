@@ -30,7 +30,7 @@
 /* 文章列表页样式 */
 #article-list .article{
     padding: 28px 0;
-    color: black;
+    color: #ffffff;
 }
 
 #article-list .article .title{
@@ -137,19 +137,16 @@
     -moz-transition: background-color .3s ease-in-out;/* Firefox */
     -o-transition: background-color .3s ease-in-out;/* Opera */
 }
-
 #article-text>p {
     text-indent: 2em;
 }
-
 #article-text ul>li,#article-text ol>li{
     content: counter(item)".";
     list-style-type: decimal;
     margin-left: 14px;
 }
 
-#article-text>p:hover, #article-text>ul:hover, #article-text blockquote, #article-text>ol:hover{
-
+#article-text>p:hover, #article-text>ul:hover, #article-text blockquote:hover, #article-text>ol:hover{
     background-color: rgba(40, 40, 40, 0.65);
 }
 
@@ -165,7 +162,7 @@
 }
 
 #article-text>pre>code{
-    background-color: white;
+    background-color: #f2f2f2;
     border-radius: 2px;
     margin-left: 40px;
     padding: 2px 10px;
@@ -191,14 +188,14 @@
 }
 
 code{
-    background: #eee;
+    background: #f2f2f2;
     border-radius: 4px;
     color: #4fadd9;
     padding: 0 3px 1px 3px;
 }
 
 blockquote>p{
-    border-left: 6px solid #dddddd;
+    border-left: 2px solid #dddddd;
     font-style: oblique;
     padding: 0 10px;
     color: #dddddd;

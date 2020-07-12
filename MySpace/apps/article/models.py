@@ -1,10 +1,21 @@
 from django.db import models
+from django.db.models import Manager
 from django.utils.safestring import mark_safe
-
 import mistune
 from mdeditor.fields import MDTextField
-
 from ..utils.basemodel import VisitBaseModel, BaseModel
+
+
+class ArticleManager(Manager):
+
+    def get_abstract_all(self):
+        return super(ArticleManager, self).all()
+
+    def filter(self, *args, **kwargs):
+        return super(ArticleManager, self).filter(status=self.model.STATUS_NORMAL, *args, **kwargs)
+
+    def all(self):
+        return super(ArticleManager, self).filter(status=self.model.STATUS_NORMAL)
 
 
 class Category(BaseModel):
@@ -47,22 +58,33 @@ class Article(VisitBaseModel):
     content_html = models.TextField(verbose_name="正文html", blank=True, editable=False)
     category = models.ForeignKey(Category, verbose_name="文章分类", on_delete=models.DO_NOTHING)
     tag = models.ManyToManyField(Tag, verbose_name='标签')
+    init_objects = Manager()
+    objects = ArticleManager()
 
-    @classmethod
-    def get_hot_articles(cls):
+    # @classmethod
+    # def get_hot_articles(cls):
+    #
+    #     return cls.objects.filter(status=cls.STATUS_NORMAL).select_related('category')
+    #
+    # @classmethod
+    # def get_latest_article(cls):
+    #
+    #     return cls.objects.filter(status=cls.STATUS_NORMAL).select_related('category')
 
-        return cls.objects.filter(status=cls.STATUS_NORMAL).select_related('category')
+    def get_cache_keys(self) -> set:
 
-    @classmethod
-    def get_latest_article(cls):
+        related_cache_key: set = {
+            f'context:{self._meta.model_name}:list',  # 文章列表缓存
+            f'context:{self._meta.model_name}:list:category:{self.category_id}'  # 关联的分类
+        }
+        # FIXME: 对于新增对象，无法获取多对多字段的缓存 键 ～ 无法及时刷新cache.
+        return related_cache_key ^ {f'context:{self._meta.model_name}:list:tag:{tag.get("id")}' for tag in self.tag.values('id')}
 
-        return cls.objects.filter(status=cls.STATUS_NORMAL).select_related('category')
-
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         """ 重写文章主体 """
         safe_content = mark_safe(self.content)
         self.content_html = mistune.markdown(safe_content)
-        super().save(*args, **kwargs)
+        super(Article, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = verbose_name_plural = "文章"

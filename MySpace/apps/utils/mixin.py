@@ -3,6 +3,7 @@
 __author__ = "Monkey"
 
 import datetime
+from collections import Iterable
 from django.core.cache import cache
 from django.db.models import F
 from django.shortcuts import render
@@ -24,7 +25,7 @@ def get_context(*args, **kwargs) -> dict:
     context: dict[str:'QuerySet', str:list, ...] = dict()
 
     for model, para in model_list.items():
-        cache_key: str = 'context:%s:list' % model.__name__.lower()
+        cache_key: str = f'context:{model._meta.model_name}:list'
 
         model_values: 'QuerySet' = cache.get(cache_key)
 
@@ -35,11 +36,11 @@ def get_context(*args, **kwargs) -> dict:
             cache.set(cache_key, model_values, 24 * 3600)  # 24h
         # 更新context
         context.update(
-            {'%s_list' % model.__name__.lower(): model_values}
+            {f'{model._meta.model_name}_list': model_values}
         )
 
     # 更新 province 和 city 实现 一次IO 得到全部数据
-    cache_key: str = 'context:%s:list' % Province.__name__.lower()
+    cache_key: str = f'context:{Province._meta.model_name}:list'
     province_list: 'QuerySet' = cache.get(cache_key)
     if province_list is None:
 
@@ -50,7 +51,7 @@ def get_context(*args, **kwargs) -> dict:
         for p_id, p_name, c_id, c_name in Province.objects.values_list('id', 'name', 'city__id', 'city__name'):
 
             if not tmp_dict.get(str(p_id)):
-                tmp_dict[str(p_id)] = list([{'id': p_id, 'name':p_name}])
+                tmp_dict[str(p_id)] = list([{'id': p_id, 'name': p_name}])
 
             tmp_dict[str(p_id)].append({'id': c_id, 'name': c_name})
 
@@ -121,22 +122,31 @@ def rich_render(*args, **kwargs) -> render:
 
 
 class FlushCacheMixin(object):
-    cache_list: list = list()
+    """
+    自动更新缓存的混入 默认的会查找模型下定义的 cache_list 和
+    get_cache_list 的结果，递归的在缓存中删除他们。
+    """
+    cache_keys: Iterable = None
 
-    def get_cache_list(self) -> list:
-        """ 返回一个空列表，给子类重写的方法 """
-        return list()
+    def get_cache_keys(self) -> set:
+        """
+        get_cache_keys 方法和 cache_keys 只能有一个生效，类似于 get_queryset 与 queryset,
+        当覆盖此方法时 queryset 属性可能会无效。
+        """
+
+        if self.cache_keys is not None:
+            cache_keys: Iterable = self.cache_keys
+            if not isinstance(cache_keys, Iterable):
+                raise TypeError(f'{self._meta.model_name}.cache_keys is not iterable!')
+        else:
+            cache_keys: set = set()
+        return cache_keys
 
     def save(self, *args, **kwargs) -> None:
 
-        [cache.delete(key) for key in self._cache_list()]
         super(FlushCacheMixin, self).save(*args, **kwargs)
-
-    def _cache_list(self) -> list:
-        """ 返回模型修改影响的缓存列表 """
-        cache_list: list = self.cache_list  # 获取静态缓存列表
-        cache_list.extend(self.get_cache_list())  # 获取需要拼接的缓存key 列表
-        return cache_list
+        cache_set: set = self.get_cache_keys()
+        map(cache.delete, cache_set)
 
 
 class VisitIncrMixin(object):
@@ -144,10 +154,9 @@ class VisitIncrMixin(object):
     pk_url_kwarg: str = None
     model: 'model.Model' = None
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs) -> 'TemplateResponse':
 
         response = super().get(request, *args, **kwargs)
-        print(type(response))
         self.handle_visited(request)
         return response
 
@@ -161,10 +170,15 @@ class VisitIncrMixin(object):
 
         pk: str = getattr(self, 'pk_url_kwarg')
         pk: str = kwargs.get(pk) or self.kwargs.get(pk)
+        if not pk:
+            if hasattr(self, '_pk'):
+                pk = self._pk
+            else:
+                raise (f'{self.__class__.__name__} must rely on a primary key flag or "_pk".')
         model: 'model.Model' = getattr(self, 'model')
 
         uid: str = request.uid
-        visit_key: str = 'visit:{}:{}'.format(uid, self.request.path)
+        visit_key: str = f'visit:{uid}:{self.request.path}'
 
         if not cache.get(visit_key):
             increase = True

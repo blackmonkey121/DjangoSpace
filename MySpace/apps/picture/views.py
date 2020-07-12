@@ -45,8 +45,8 @@ class AlbumDetailView(NavViewMixin, VisitIncrMixin, ListView):
     def get_queryset(self) -> QuerySet:
         """ FIXME:ListView 分页逻辑没有缓存查询结果 多一次 count 查询 ！"""
 
-        album_id: int = self.kwargs.get('id')
-        cache_key: str = 'context:album:detail:%s' % (album_id,)
+        pk: int = self.kwargs.get('id')
+        cache_key: str = f'context:album:detail:{pk}'
         image_list: QuerySet = cache.get(cache_key)
 
         if not image_list:
@@ -54,7 +54,7 @@ class AlbumDetailView(NavViewMixin, VisitIncrMixin, ListView):
                 'image__desc', 'image__visit', 'image__img', 'image__create_time',   # Image msg.
                 'desc', 'name'   # Album msg.
             )
-            image_list: QuerySet = Album.objects.filter(id=album_id).prefetch_related('image_set').values(*fields)
+            image_list: QuerySet = Album.objects.filter(id=pk).prefetch_related('image_set').values(*fields)
             # TODO：简单粗暴缓解 redis 穿透，实现中间件层逻辑时增加一些优雅的策略
             life: int = 5 if image_list.exists() else 60
             cache.set(cache_key, image_list, life * 60)
@@ -74,8 +74,6 @@ class ImageView(VisitIncrMixin, View):
 
     def get(self, request, *args, **kwargs) -> JsonResponse:
         msg: dict = {'code': 0, 'status': 0, 'data': None}
-
-        self.handle_visited(request, *args, **kwargs)
 
         return JsonResponse(msg)
 

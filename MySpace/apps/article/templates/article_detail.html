@@ -36,8 +36,8 @@
             <div id="tag" class="float-r">
                 <span class="tip b-info">Tags</span> <i></i>
 
-                {% for tag in article.tag.all %}
-                    <span class="">{{ tag.name }}</span> <i></i>
+                {% for t in tag %}
+                    <span class="">{{ t }}</span> <i></i>
                 {% endfor %}
 
             </div>
@@ -46,6 +46,21 @@
 
         <div id="article-text" class="para">
             {{ article.content_html | safe }}
+
+        </div>
+
+        <div id="new_comment">
+            <hr>
+            {{ forms.media }}
+            {{ forms.context }}
+        </div>
+
+        <div id="comment">
+            {% for k, v in comment.items %}
+                <p>{{ k }}{{ v.0 }}{{ v.1 }}</p>
+
+            {% endfor %}
+
         </div>
 
     </div>

@@ -15,7 +15,7 @@ class UserIDMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
-    def __call__(self, request):
+    def __call__(self, request, *args, **kwargs):
         uid = self.generate_uid(request)
         request.uid = uid
         response = self.get_response(request)
