@@ -3,6 +3,7 @@
 __author__ = "Monkey"
 
 from io import BytesIO
+from typing import Tuple
 
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
@@ -57,8 +58,8 @@ class WatermarkStorage(BaseStorage):
 class AdjustImageStorage(BaseStorage):
     """ 调整图片大小 """
 
-    def __init__(self, re_size=None, *args, **kwargs) -> 'AdjustImageStorage':
-        self.re_size = re_size or (300, 300)
+    def __init__(self, re_size: tuple = None, *args, **kwargs) -> None:
+        self.re_size: Tuple[int, int] = re_size or (300, 300)
         super(AdjustImageStorage, self).__init__(*args, **kwargs)
 
     def save(self, name: str, content: InMemoryUploadedFile, max_length: int = None) -> object:

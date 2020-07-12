@@ -23,11 +23,7 @@ class CategoryAdmin(object):
     # 定义在详细信息中显示的字段 可以是列表 元组
     list_display = ('name', 'create_time', 'status', 'article_count')
 
-    # 也可以由fieldsets 字段 来指定
     fields = ('name', 'status')
-
-    # 在 分类页面展示 行内编辑区 PostInline 在上方定义
-    # inlines = (PostInline,)
 
     def article_count(self, obj):
         """ 文章数目的统计 """

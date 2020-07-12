@@ -40,7 +40,6 @@ urlpatterns = [
 
     path('category-autocomplete/', CategoryAutoComplete.as_view(), name='category-autocomplete'),
     path('tag-autocomplete/', TagAutoComplete.as_view(), name='tag-autocomplete'),
-
     path('province-autocomplete/', ProvinceComplete.as_view(), name='province-autocomplete'),
 
     path('', HomeView.as_view(), name='home'),

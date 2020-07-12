@@ -1,11 +1,9 @@
 from django.db import models
 from django.utils.safestring import mark_safe
-
 import mistune
 from mdeditor.fields import MDTextField
-
 from ..utils.basemodel import VisitBaseModel, BaseModel
-
+from xadmin.views.edit import *
 
 class Category(BaseModel):
 
@@ -48,21 +46,31 @@ class Article(VisitBaseModel):
     category = models.ForeignKey(Category, verbose_name="文章分类", on_delete=models.DO_NOTHING)
     tag = models.ManyToManyField(Tag, verbose_name='标签')
 
-    @classmethod
-    def get_hot_articles(cls):
+    # @classmethod
+    # def get_hot_articles(cls):
+    #
+    #     return cls.objects.filter(status=cls.STATUS_NORMAL).select_related('category')
+    #
+    # @classmethod
+    # def get_latest_article(cls):
+    #
+    #     return cls.objects.filter(status=cls.STATUS_NORMAL).select_related('category')
 
-        return cls.objects.filter(status=cls.STATUS_NORMAL).select_related('category')
 
-    @classmethod
-    def get_latest_article(cls):
+    def get_cache_keys(self) -> set:
 
-        return cls.objects.filter(status=cls.STATUS_NORMAL).select_related('category')
+        related_cache_key: set = {
+            f'context:{self._meta.model_name}:list',  # 文章列表缓存
+            f'context:{self._meta.model_name}:list:category:{self.category_id}'  # 关联的分类
+        }
+        # FIXME: 对于新增对象，无法获取多对多字段的缓存 键 ～ 无法及时刷新cache.
+        return related_cache_key ^ {f'context:{self._meta.model_name}:list:tag:{tag.get("id")}' for tag in self.tag.values('id')}
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         """ 重写文章主体 """
         safe_content = mark_safe(self.content)
         self.content_html = mistune.markdown(safe_content)
-        super().save(*args, **kwargs)
+        super(Article, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = verbose_name_plural = "文章"
