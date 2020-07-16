@@ -1,36 +1,39 @@
+#menu{
+    background-color: rgba(50, 50, 50, 0.9);
+}
 /* 文章公有的样式   */
 
 #main-left{
-    width: 12%;
+    width: 14%;
     clear: right;
     height: 100px;
 }
 
 #main-center{
-    width: 76%;
+    width: 72%;
     color: white;
 }
 
 #main-right{
-    width: 12%;
+    width: 14%;
     height: 100px;
 }
 
 .para{
-    line-height: 26px;
+    line-height: 23px;
     letter-spacing: 1px;
     padding-left: 4px;
 }
 
 #background{
-    background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url("../img/article-background.jpg");
+    background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.5)), url("../img/article-background.jpg");
     /*opacity: 0.5;*/
 }
 
 /* 文章列表页样式 */
-#article-list .article{
+#article-list .article {
     padding: 28px 0;
-    color: #ffffff;
+    color: #555;
 }
 
 #article-list .article .title{
@@ -40,7 +43,7 @@
     font-size: 24px;
     font-weight: 800;
     cursor: pointer;
-    color: #555;
+    color: #004488;
     transition: padding-left 0.4s;
 
 }
@@ -65,10 +68,8 @@
     border-left: 4px solid #fcd004;
     padding: 10px;
     font-size: 32px;
-    font-weight: 400;
-    cursor: pointer;
-    color: white;
-    transition: padding-left 0.4s;
+    font-weight: 800;
+    color: #004488;
 }
 
 #article-text {
@@ -76,7 +77,7 @@
 }
 
 #article-decoration{
-    border-bottom: 1px solid white;
+    border-bottom: 1px solid #004488;
     padding-bottom: 8px;
 }
 
@@ -91,68 +92,71 @@
 
 #tag{
     display: inline-block;
-    border-bottom: 1px solid white;
+    border-bottom: 1px solid #004488;
     padding-bottom: 8px;
     margin: 16px 0;
 }
 
+.tag-elem{
+    color: #2e6da4;
+}
+
 #article-detail{
-    background-color: rgba(40, 40, 40, 0.65);
-    padding: 16px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 18px;
 }
 
 #article-detail h2{
     font-size: 28px;
     margin: 40px 0 20px 0;
     margin-left: 10px;
-    color: white;
-    border-left: 8px solid deepskyblue;
+    color: black;
+    border-left: 8px solid #ffaa00;
     padding-left: 10px;
+    -webkit-transition: color .3s ease-in-out;/* Safari 和 Chrome */
+    -moz-transition: color .3s ease-in-out;/* Firefox */
+    -o-transition: color .3s ease-in-out;/* Opera */
 
 }
 
 #article-detail h3{
     font-size: 20px;
     margin: 30px 0 15px 20px;
-    color: white;
+    color: rgba(1, 50, 114, 0.81);
     border-left: 4px solid deepskyblue;
     padding-left: 10px;
+    -webkit-transition: color .3s ease-in-out;/* Safari 和 Chrome */
+    -moz-transition: color .3s ease-in-out;/* Firefox */
+    -o-transition: color .3s ease-in-out;/* Opera */
 
 }
 
 #article-detail h4{
     display: inline-block;
     margin: 10px 0 10px 30px;
-    color: white;
-    border-bottom: 1px solid white;
+    color: rgba(1, 79, 170, 0.81);
+    border-bottom: 2px solid #000000;
+    -webkit-transition: color .3s ease-in-out;/* Safari 和 Chrome */
+    -moz-transition: color .3s ease-in-out;/* Firefox */
+    -o-transition: color .3s ease-in-out;/* Opera */
+}
+
+#article-detail h2:hover, #article-detail h3:hover, #article-detail h4:hover{
+    color: deepskyblue;
 }
 
 
 #article-text>p, #article-text>blockquote, #article-text>ul, #article-text>ol{
-    color: white;
+    color: #004488;
     margin-left: 20px;
-    padding: 10px;
-    font-weight: 300;
-    -webkit-transition: background-color .3s ease-in-out;/* Safari 和 Chrome */
-    -moz-transition: background-color .3s ease-in-out;/* Firefox */
-    -o-transition: background-color .3s ease-in-out;/* Opera */
+    padding: 6px;
+    font-weight: 400;
 }
-#article-text>p {
-    text-indent: 2em;
-}
+
 #article-text ul>li,#article-text ol>li{
     content: counter(item)".";
     list-style-type: decimal;
     margin-left: 14px;
-}
-
-#article-text>p:hover, #article-text>ul:hover, #article-text blockquote:hover, #article-text>ol:hover{
-    background-color: rgba(40, 40, 40, 0.65);
-}
-
-#article-text .son-img img{
-    display:block;
-    margin:0 auto;
 }
 
 #article-text .son-img{
@@ -162,9 +166,9 @@
 }
 
 #article-text>pre>code{
-    background-color: #f2f2f2;
-    border-radius: 2px;
-    margin-left: 40px;
+    background-color: white;
+    border-radius: 4px;
+    margin: 0 18px;
     padding: 2px 10px;
 }
 
@@ -173,7 +177,7 @@
 }
 
 #article-text td,th{
-    border: 2px solid #00a7a0;
+    border: 2px solid #004488;
     padding: 0 8px;
     font-weight: 400;
     color: #eee;
@@ -190,14 +194,157 @@
 code{
     background: #f2f2f2;
     border-radius: 4px;
-    color: #4fadd9;
+    color: #004488;
     padding: 0 3px 1px 3px;
+    box-shadow: 0 0 3px 1px rgba(1, 50, 114, 0.81);
+    margin: 0 4px;
+
 }
 
 blockquote>p{
-    border-left: 2px solid #dddddd;
-    font-style: oblique;
+    border-left: 3px solid #ddd;
+    font-size: 16px;
+    font-weight: 300;
     padding: 0 10px;
-    color: #dddddd;
+    font-style: oblique;
+    color: #666;
+}
 
+#comment-text{
+    background: white;
+    color: #004488;
+    resize: none;
+    width: 100%;
+    height: 170px;
+    font-size: 20px;
+    outline: none;
+    border-radius: 4px;
+    padding:8px 0 40px 8px;
+    border: none;
+}
+
+#new_comment {
+    margin: 40px 6px 40px 0;
+    color: #004488;
+}
+
+#add_cmt_bar{
+    background: white;
+    border-top: 1px solid #004488;
+    width: 98%;
+    height: 28px;
+    position: relative;
+    top:-40px;
+    left: 1.5%;
+}
+
+.post-btn {
+    background: deepskyblue;
+    margin: 6px;
+    padding: 4px;
+    float: right;
+    cursor: pointer;
+    color: white;
+}
+.post-btn:hover{
+    background: white;
+    color: deepskyblue;
+    margin: 6px;
+    padding: 4px;
+    float: right;
+    cursor: pointer;
+    border: 1px solid deepskyblue;
+}
+
+
+#contentSidebar {
+    background-color: white;
+    border: 1px solid #ddd;
+    width: 13%;
+    overflow: hidden;
+    position: fixed;
+    top: 14%;
+    right: 0;
+    color: #555;
+}
+
+#ctt-head{
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+}
+
+#ctt-head i{
+    position: relative;
+    right: -24px;
+}
+#ctt-head i:hover{
+    position: relative;
+    right: -24px;
+    cursor: pointer;
+    color: #aaa;
+}
+
+#ctt-body{
+    padding: 10px 0;
+    height: 360px;
+    width: 100%;
+    overflow: hidden;
+    overflow-y:scroll; /*总是显示纵向滚动条*/
+    font-size: 14px;
+}
+/*滚动条样式*/
+#ctt-body::-webkit-scrollbar {
+    width: 2px;
+}
+#ctt-body::-webkit-scrollbar-thumb {
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: #555;
+}
+#ctt-body::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: white;
+}
+
+#ctt-body p{
+    margin-top: 8px;
+    font-weight: 300;
+    cursor: pointer;
+}
+#ctt-body p:hover {color: deepskyblue} /* 鼠标悬浮在上的链接 */
+
+
+#ctt-body .cls-h2{
+    margin-left: 4px;
+    font-weight: 500;
+}
+#ctt-body .cls-h3{
+    margin-left: 24px;
+}
+#ctt-body .cls-h4{
+    margin-left: 44px;
+}
+
+#bottom-tool{
+    position: fixed;
+    right: 9.5%;
+    bottom: 3%;
+    font-size: 32px;
+    color: #004488;
+}
+#bottom-tool div{
+    background: white;
+    margin-top: 10px;
+    padding: 8px;
+    cursor: pointer;
+}
+#bottom-tool div:hover{
+    color: deepskyblue;
+}
+
+#toTop{
+    display: none;
 }
