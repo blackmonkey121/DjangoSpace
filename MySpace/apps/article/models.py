@@ -4,7 +4,7 @@ from django.utils.safestring import mark_safe
 import mistune
 from mdeditor.fields import MDTextField
 from ..utils.basemodel import VisitBaseModel, BaseModel
-
+from xadmin.views.edit import *
 
 class ArticleManager(Manager):
 

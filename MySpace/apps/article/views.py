@@ -1,6 +1,7 @@
 from django.core.cache import cache
 from django.db.models import QuerySet
-from django.views import View
+from django.views.generic.base import View
+
 from django.views.generic.list import ListView
 
 from .models import Article

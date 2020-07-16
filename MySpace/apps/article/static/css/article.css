@@ -31,7 +31,7 @@
 }
 
 /* 文章列表页样式 */
-#article-list .article{
+#article-list .article {
     padding: 28px 0;
     color: #555;
 }
@@ -157,11 +157,6 @@
     content: counter(item)".";
     list-style-type: decimal;
     margin-left: 14px;
-}
-
-#article-text .son-img img{
-    display:block;
-    margin:0 auto;
 }
 
 #article-text .son-img{
