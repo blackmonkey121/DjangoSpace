@@ -10,11 +10,25 @@
 
 {% block article-css %}
     <link rel="stylesheet" href="{% static 'css/googlecode.css' %}">
+    <link rel="stylesheet" href="{% static 'font-awesome-4.7.0/css/font-awesome.min.css' %}">
 {% endblock %}
 
 
 
 {% block main-center %}
+
+    <div id="contentSidebar">
+        <p id="ctt-head">CONTENTS<i class="fa fa-times" aria-hidden="true"></i></p>
+        <div id="ctt-body"></div>
+    </div>
+
+    <div id="bottom-tool">
+    <div id="toTop"><i class="fa fa-arrow-up" aria-hidden="true"></i></div>
+    <div id="showContent"><i class="fa fa-list" aria-hidden="true"></i></div>
+    <div id="sendEmail"><a href="mailto:931976722@qq.com"><i class="fa fa-envelope-o" aria-hidden="true"></i></a></div>
+    </div>
+
+
     <div id="article-detail">
 
         <div id="article-title">
@@ -37,7 +51,7 @@
                 <span class="tip b-info">Tags</span> <i></i>
 
                 {% for t in tag %}
-                    <span class="">{{ t }}</span> <i></i>
+                    <span class="tag-elem">{{ t }}</span> <i></i>
                 {% endfor %}
 
             </div>
@@ -49,21 +63,28 @@
 
         </div>
 
-        <div id="new_comment">
-            <hr>
-            {{ forms.media }}
-            {{ forms.context }}
+    </div>
+    <div id="new_comment">
+
+
+            <textarea name="comment" id="comment-text" placeholder="@评论："></textarea>
+            <p id="add_cmt_bar">
+                <span class="post-btn">发表</span>
+                <span>word</span>:<span>0</span>
+            </p>
         </div>
 
-        <div id="comment">
+    <div id="comment">
+        {% if comment %}
             {% for k, v in comment.items %}
                 <p>{{ k }}{{ v.0 }}{{ v.1 }}</p>
 
             {% endfor %}
+        {% endif %}
+
 
         </div>
 
-    </div>
 {% endblock %}
 
 {% block article-js %}

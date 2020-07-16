@@ -21,16 +21,16 @@
 <div id='menu'>
     <ul>
         <li><a href='{% url 'home:home' %}'>Home</a></li>
-        <li><a href='{% url 'picture:album' %}'>相册</a></li>
-        <li class='has-sub'><a href='{% url 'life:book_list' %}'>生活</a>
+        <li><a href='{% url 'picture:album' %}'>Picture</a></li>
+        <li class='has-sub'><a href='{% url 'life:book_list' %}'>Life</a>
             <ul>
-                <li><a href='{% url 'life:book_list' %}'>书架</a></li>
-                <li><a href='{% url 'life:note_list' %}'>随笔</a></li>
-                <li><a href='{% url 'life:perception_list' %}'>感悟</a></li>
-                <li><a href='{% url 'life:cook_list' %}'>烹饪</a></li>
+                <li><a href='{% url 'life:book_list' %}'>Book</a></li>
+                <li><a href='{% url 'life:note_list' %}'>Note</a></li>
+                <li><a href='{% url 'life:perception_list' %}'>Perception</a></li>
+                <li><a href='{% url 'life:cook_list' %}'>Cook</a></li>
             </ul>
         </li>
-        <li class='has-sub'><a href=''>分类</a>
+        <li class='has-sub'><a href=''>Category</a>
             <ul>
                 {% for category in category_list %}
                     <li><a href='{% url 'article:category' category.id %}'>{{ category.name }}</a></li>
@@ -39,7 +39,7 @@
 
             </ul>
         </li>
-        <li class='has-sub'><a href=''>标签</a>
+        <li class='has-sub'><a href=''>tag</a>
             <ul>
                 {% for tag in tag_list %}
                     <li><a href="{% url 'article:tag' tag.id %}">{{ tag.name }}</a></li>
@@ -47,7 +47,7 @@
 
             </ul>
         </li>
-        <li class='has-sub'><a href=''>归档</a>
+        <li class='has-sub'><a href=''>Archive</a>
 
 
             <ul>
@@ -66,7 +66,7 @@
                 {% endfor %}
             </ul>
         </li>
-        <li class='has-sub'><a href='{% url 'travel:travel' %}'>足迹</a>
+        <li class='has-sub'><a href='{% url 'travel:travel' %}'>Travel</a>
             <ul>
                 {% for province in province_list%}
                     <li class='has-sub'><a href='{% url 'travel:province' province.id %}'>{{ province.name }}</a>
@@ -88,8 +88,8 @@
         </li>
 
 
-        <li><a href='{% url 'home:me' %}'>关于我</a></li>
-        <li><a href='/admin/'>管理</a></li>
+        <li><a href='{% url 'home:me' %}'>About me</a></li>
+        <li><a href='/admin/'>Manager</a></li>
         <li><a href='https://github.com/blackmonkey121'>git</a></li>
         <li><a href="{% url 'rss' %}">RSS</a></li>
     </ul>

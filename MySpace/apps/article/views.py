@@ -2,11 +2,11 @@ from django.core.cache import cache
 from django.db.models import QuerySet
 from django.views import View
 from django.views.generic.list import ListView
-from ..comment.cmt_forms import ArticleCommentForm
 
 from .models import Article
 from ..utils.mixin import NavViewMixin, VisitIncrMixin, rich_render
 import datetime
+
 
 class ArticleView(NavViewMixin, ListView):
     """ 抽象类 """
@@ -49,7 +49,7 @@ class ArticleListView(ArticleView):
         return super(ArticleListView, self).get(request, *args, **kwargs)
 
     def get_queryset(self, *args, **kwargs) -> QuerySet:
-        cache_key: str = f'context:{self.model._meta.model_name}:list'
+        cache_key: str = f'context:{self.model._meta.app_label}:{self.model._meta.model_name}:list'
         qs: QuerySet = cache.get(cache_key)
 
         if not qs:
@@ -67,7 +67,7 @@ class CategoryListView(ArticleView):
         if not category_id:
             raise KeyError('Category id is must be required！')
 
-        cache_key: str = f'context:{self.model._meta.model_name}:category:{category_id}:list'
+        cache_key: str = f'context:{self.model._meta.app_label}:{self.model._meta.model_name}:list:by:category:{category_id}'
         qs: QuerySet = cache.get(cache_key)
 
         if not qs:
@@ -88,7 +88,7 @@ class TagListView(ArticleView):
             raise KeyError('Tag id is must be required！')
 
         # 查缓存
-        cache_key: str = f'context:{self.model._meta.model_name}:category:{tag_id}:list'
+        cache_key: str = f'context:{self.model._meta.app_label}:{self.model._meta.model_name}:list:by:tag:{tag_id}'
         qs: QuerySet = cache.get(cache_key)
 
         if not qs:
@@ -136,9 +136,9 @@ class ArticleDetailView(VisitIncrMixin, View):
     model = Article
 
     def get(self, request, *args, **kwargs) -> 'TemplateResponse':
-        pk = self._pk = kwargs.get('id')
+        article_id = self._pk = kwargs.get('id')
 
-        cache_key: str = f'context:{self.model._meta.model_name}:detail:{pk}'
+        cache_key: str = f'context:{self.model._meta.app_label}:{self.model._meta.model_name}:detail:{article_id}'
         context: dict = cache.get(cache_key)
 
         if not context:  # 缓存未命中
@@ -154,7 +154,7 @@ class ArticleDetailView(VisitIncrMixin, View):
                 where aa.id = '%s'"""
 
             with connection.cursor() as cursor:
-                cursor.execute(SQL, pk)
+                cursor.execute(SQL, article_id)
                 ret: tuple = cursor.fetchall()
 
             if ret:                     # 如果查询集不为空
@@ -176,13 +176,18 @@ class ArticleDetailView(VisitIncrMixin, View):
 
                 context: dict = {
                     'article': article,
-                    'comment': comment,
                     'tag': tag,
-                    'forms': ArticleCommentForm()
                 }
+
+                if list(comment)[0] is not None:   # 如果没有评论数据，就不传给模版上下文
+                    context.update(
+                        {'comment': comment}
+                    )
+
                 life: int = 60
             else:
                 life: int = 5  # 缓存未命中，SQL查询为空 ---> 不合法URL 创建临时缓存
+
             cache.set(cache_key, context, life * 60)
 
         response = rich_render(request, 'article_detail.html', context=context, *args, **kwargs)

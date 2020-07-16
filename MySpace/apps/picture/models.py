@@ -7,13 +7,16 @@ from ..utils.storage import AdjustImageStorage
 class Album(VisitBaseModel):
     """FIXME： 以事件或人组织，不需要地址 ？"""
 
-    cache_list: list = [
-        'context:album:list',
-    ]
-
     name = models.CharField(max_length=64, verbose_name="相册名", default='No Name', db_index=True)
     desc = models.CharField(max_length=512, verbose_name='描述')
     cover = models.ImageField(upload_to="picture/%Y/%m/%d/", verbose_name="封面", blank=True)
+
+    def get_cache_keys(self) -> set:
+
+        ret_set: set = {
+            f'context:{self._meta.app_label}:{self._meta.model_name}:list',
+        }
+        return ret_set
 
     def save(self, *args, **kwargs) -> None:
         """
@@ -44,12 +47,12 @@ class Image(FileManager):
         """
         super().save(*args, **kwargs)
 
-    def get_cache_list(self) -> list:
-        key_list: list = [
-            'context:album:list',
-            'context:album:detail:%s' % self.album.id
-        ]
-        return key_list
+    def get_cache_list(self) -> set:
+        ret_set: set = {
+            f'context:{self._meta.app_label}:{self.album._meta.model_name}:list',  # 相册有照片数量，要更新
+            f'context:{self._meta.app_label}:{self._meta.model_name}:list:by:{self.album._meta.model_name}:{self.album.id}',
+        }
+        return ret_set
 
     def __str__(self) -> str:
         return '%s(%s)' % (self.album.name, self.id)

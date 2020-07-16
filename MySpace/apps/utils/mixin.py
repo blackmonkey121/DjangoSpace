@@ -25,26 +25,26 @@ def get_context(*args, **kwargs) -> dict:
     context: dict[str:'QuerySet', str:list, ...] = dict()
 
     for model, para in model_list.items():
-        cache_key: str = f'context:{model._meta.model_name}:list'
+        cache_key: str = f'context:{model._meta.app_label}:{model._meta.model_name}:list'
 
-        model_values: 'QuerySet' = cache.get(cache_key)
+        qs: 'QuerySet' = cache.get(cache_key)
 
         # 如果缓存未命中, 查询 然后更新缓存
-        if model_values is None:
-            model_values = model.objects.values(*para).filter(status=model.STATUS_NORMAL)
+        if qs is None:
+            qs = model.objects.values(*para).filter(status=model.STATUS_NORMAL)
             # 更新缓存
-            cache.set(cache_key, model_values, 24 * 3600)  # 24h
+            cache.set(cache_key, qs, 60*60)  # 1h
         # 更新context
         context.update(
-            {f'{model._meta.model_name}_list': model_values}
+            {f'{model._meta.model_name}_list': qs}
         )
 
     # 更新 province 和 city 实现 一次IO 得到全部数据
-    cache_key: str = f'context:{Province._meta.model_name}:list'
-    province_list: 'QuerySet' = cache.get(cache_key)
-    if province_list is None:
+    cache_key: str = f'context:travel:province:list'
+    province_qs: 'QuerySet' = cache.get(cache_key)
+    if province_qs is None:
 
-        province_list: list = list()
+        province_qs: list = list()
 
         tmp_dict: dict = dict()
         # 主动联表查询所有用到的数据 优化SQL
@@ -58,20 +58,20 @@ def get_context(*args, **kwargs) -> dict:
         # 封装成对象列表，方便模版语言遍历，前后不分离 需要在后端实现
         for province in tmp_dict.values():
             province[0]['city'] = province[1:]
-            province_list.append(province[0])
+            province_qs.append(province[0])
 
         # 更新缓存
-        cache.set(cache_key, province_list, 24 * 3600)
+        cache.set(cache_key, province_qs, 60 * 60)
 
     context.update({
-        'province_list': province_list
+        'province_list': province_qs
     })
 
     # FIXME:检查日期是否ok 应该在项目启动时检查配置
     if not isinstance(settings.DATE, tuple):
         raise TypeError('settings.DATE must be tuple.')
 
-    date_key: str = 'context:date_merge'
+    date_key: str = 'context:article:article:date:list'
     date_merge: dict = cache.get(date_key)
 
     if not date_merge:
@@ -125,6 +125,15 @@ class FlushCacheMixin(object):
     """
     自动更新缓存的混入 默认的会查找模型下定义的 cache_list 和
     get_cache_list 的结果，递归的在缓存中删除他们。
+
+    cache name: Follow the rules:
+        type:<app_label>:<model_name>:[<list>:by:<key>:<id>|<detail>:<id>]
+        eg:
+            context:article:article:list:by:tag:tag_id
+            context:article:article:detail:article_id
+            context:article:article:list:by:date:2020-01
+            ...
+
     """
     cache_keys: Iterable = None
 
@@ -146,7 +155,9 @@ class FlushCacheMixin(object):
 
         super(FlushCacheMixin, self).save(*args, **kwargs)
         cache_set: set = self.get_cache_keys()
-        map(cache.delete, cache_set)
+        print(cache_set)
+        [cache.delete(key) for key in cache_set]
+
 
 
 class VisitIncrMixin(object):
