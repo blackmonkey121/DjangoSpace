@@ -16,7 +16,7 @@
 
 
 {% block main-center %}
-
+<!-- 边栏数据 -->
     <div id="contentSidebar">
         <p id="ctt-head">CONTENTS<i class="fa fa-times" aria-hidden="true"></i></p>
         <div id="ctt-body"></div>
@@ -27,6 +27,9 @@
     <div id="showContent"><i class="fa fa-list" aria-hidden="true"></i></div>
     <div id="sendEmail"><a href="mailto:931976722@qq.com"><i class="fa fa-envelope-o" aria-hidden="true"></i></a></div>
     </div>
+
+<!-- 附加数据 -->
+    <div id="page_data" data-article_id="{{ article.id }}"></div>
 
 
     <div id="article-detail">
@@ -67,10 +70,10 @@
     <div id="new_comment">
 
 
-            <textarea name="comment" id="comment-text" placeholder="@评论："></textarea>
+            <textarea name="comment" id="comment-text" maxlength="255" placeholder="@评论："></textarea>
             <p id="add_cmt_bar">
-                <span class="post-btn">发表</span>
-                <span>word</span>:<span>0</span>
+                <span id="post-btn">发表</span>
+                <span>word</span>:<span id="num-word"></span>
             </p>
         </div>
 

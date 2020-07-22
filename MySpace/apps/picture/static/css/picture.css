@@ -13,7 +13,7 @@
 }
 
 #background{
-    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),url("../img/picture-background.jpg");
+    background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5)),url("../img/picture-background.jpg");
 }
 
 
@@ -102,5 +102,77 @@
     color: rgba(0, 0, 0, 0.6);
     font-weight: 300;
 }
+/* 照片墙 */
+#picture-index{
+    margin: 120px 80px 60px 180px;
+}
+#image-wall{
+    display: none;
+}
+#image-wall .image-line{
+    position: relative;
+    border: 10px solid white;
+    box-shadow: 0 0 14px 4px #eee;
+    overflow: hidden;
+    float: top;
+}
+#image-wall .image-line img{
+    transition: all .4s ease-in-out;
+    cursor: pointer;
+    position: relative;
+    bottom: -2px;
+}
+#image-wall .image-line img:hover{
+    -webkit-transform: scale(1.2);
+    -moz-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+    -o-transform: scale(1.2);
+    transform: scale(1.2);
+}
+.image_desc{
+    display: none;
+    position: absolute;
+    background: rgba(13, 206, 6, 0.8);
+    color: white;
+    box-shadow: #5bc0de;
+    border-radius: 5px;
+    padding: 10px;
+    width: 120px;
+    height: 80px;
+    font-size: 14px;
+    z-index: 1000;
+    top: -40px;
+    right: 40px;
 
+}
+/* 查看单张照片 */
+#image_plat{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(53,53,53,0.7);
+    top: 52px;
+    display: none;
+    text-align: center;
+    overflow: scroll;
+}
+#image_plat::-webkit-scrollbar {
+    width: 1px;
+}
+#image_plat::-webkit-scrollbar-thumb {
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: #555;
+}
+#image_plat::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: white;
+}
+#image_plat img{
+
+    margin: 5% 0;
+    height: 80%;
+    display: inline-block;
+}
 

@@ -1,39 +1,27 @@
 {% extends 'picture_base.html' %}
 
-{% block main-left %}
-    <div id="picture-index">
+{% load static %}
 
-        <ul id="image-menu">
+{% block main %}
+    <div id="temp_data" data-start="10" data-flag="1" hidden> </div>
+    <div id="picture-index " class="clearfix">
+
+        <ul id="image-wall" >
             {% for image in image_list %}
-                <li class="image-line">
-                    <a href=""><img style="width: 100px;" src="/media/{{ image.image__img }}" alt=""></a>
+                <li class="image-line clearfix">
+                    <img src="{{ image.thumbnail }}" alt="" rsrc="{{ image.img }}">
                 </li>
             {% endfor %}
 
         </ul>
+    </div>
+    <div id="image_plat">
+    <span class="image_desc">{{ image.desc | truncatechars:120 }}</span>
 
     </div>
-    <span id="chen"></span>
-{% endblock %}
-
-
-{% block main-right %}
-    <div id="page">
-        {% if page_obj %}
-            {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
-            {% endif %}
-
-            第{{ page_obj.number }}页 共{{ paginator.num_pages }}页
-
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">下一页</a>
-            {% endif %}
-        {% endif %}
-    </div>
-
 {% endblock %}
 
 {% block picture-js %}
+    <script src="{% static 'js/picture.js' %}"></script>
 
 {% endblock %}

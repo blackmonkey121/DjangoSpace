@@ -4,7 +4,8 @@ __author__ = "Monkey"
 
 from io import BytesIO
 from typing import Tuple
-
+import time
+import os
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -84,3 +85,31 @@ class AdjustImageStorage(BaseStorage):
         image = image.crop(plat)
         image = image.resize(self.re_size)
         return image
+
+
+class ThumbImageStorage(BaseStorage):
+
+    def __init__(self, img, re_size: tuple = (400, 400), *args: tuple, **kwargs: dict):
+        self.re_size = re_size
+        self.inMemory = img
+        super(ThumbImageStorage, self).__init__(*args, **kwargs)
+
+    def save(self, name: str, content: InMemoryUploadedFile, max_length: int = None) -> object:
+        if 'image' in content.content_type:
+            img: Image.Image = Image.open(self.inMemory)
+            img: Image.Image = img.thumbnail(self.size)
+            content: InMemoryUploadedFile = self.convert_image_to_file(img, name)
+        return super().save(name, content, max_length=max_length)
+
+
+def write_test(path: str,):
+    if os.path.isdir(path):
+        assert os.access(path, os.W_OK)
+    else:
+        os.system(f"mkdir -p {path}")
+
+
+def create_unique_name(file, extend: str) -> str:
+    s, e = file.split('.')
+    salt = f'{time.time()}'.replace('.', '_')[-8:]
+    return f'{s}{salt}.{extend}'.replace(' ', '_')

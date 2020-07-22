@@ -1,16 +1,16 @@
 from django.core.cache import cache
 from django.db.models import Count, QuerySet
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.generic import View, ListView
 from .models import Album, Image
-from ..utils.mixin import NavViewMixin, VisitIncrMixin
+from ..utils.mixin import NavViewMixin, VisitIncrMixin, rich_render
 
 
 class AlbumListView(NavViewMixin, ListView):
 
     model: 'model.Model' = Album
 
-    paginate_by: int = 8
+    paginate_by: int = 2
 
     template_name: str = 'album.html'
 
@@ -33,33 +33,51 @@ class AlbumListView(NavViewMixin, ListView):
         return album_qs
 
 
-class AlbumDetailView(NavViewMixin, VisitIncrMixin, ListView):
+class AlbumDetailView(NavViewMixin, VisitIncrMixin, View):
 
-    paginate_by: int = 8
-    template_name: str = 'album_detail.html'
-    context_object_name: str = 'image_list'
+    offset: int = 12
+    # template_name: str = 'album_detail.html'
+    # context_object_name: str = 'image_list'
 
     model: 'model.Model' = Album   # visitIncrMixin 依赖它获取 模型类
     pk_url_kwarg: str = 'id'   # visitIncrMixin 依赖它获取 具体的实例
 
-    def get_queryset(self) -> QuerySet:
+    def get(self, *args, **kwargs) -> HttpResponse:
         """ FIXME:ListView 分页逻辑没有缓存查询结果 多一次 count 查询 ！"""
 
+        ajax_flag = self.request.is_ajax()
         pk: int = self.kwargs.get('id')
-        cache_key: str = f'context:{Image._meta.app_label}:{Image._meta.model_name}:list:by:{self.model._meta.model_name}:{pk}'
-        image_qs: QuerySet = cache.get(cache_key)
+        start: int = 0 if self.request.GET.get('start') is None else self.request.GET.get('start')
+        offset: int = 10 or int(self.request.GET.get('offset'))
+        cache_key: str = f'context:{Image._meta.app_label}:{Image._meta.model_name}:list:by:{self.model._meta.model_name}:{pk}:limit:{start}:{offset}'
+        image_list: list = cache.get(cache_key)
 
-        if not image_qs:
+        if not image_list:
             fields: tuple = (
-                'image__desc', 'image__visit', 'image__img', 'image__create_time',   # Image msg.
-                'desc', 'name'   # Album msg.
+                'desc', 'visit', 'thumbnail', 'create_time', 'img',   # Image msg.
+                'album__desc', 'album__name'   # Album msg.
             )
-            image_qs: QuerySet = Album.objects.filter(id=pk).prefetch_related('image_set').values(*fields)
-            # TODO：简单粗暴缓解 redis 穿透，实现中间件层逻辑时增加一些优雅的策略
-            life: int = 5 if image_qs.exists() else 60
-            cache.set(cache_key, image_qs, life * 60)
 
-        return image_qs
+            image_qs: QuerySet = Image.objects.filter(album_id=pk).prefetch_related('album').values(*fields)
+            start = int(start)
+            image_qs: QuerySet = image_qs[start:start + offset]
+            # image_qs: QuerySet = Album.objects.filter(id=pk).prefetch_related('image_set').values(*fields)[start:start + offset]
+            # TODO：简单粗暴缓解 redis 穿透，实现中间件层逻辑时增加一些优雅的策略
+            # 立即执行SQL 以确定是否有结果，QuerySet.exists 方法会产生额外的SQL查询
+
+            image_list: list = [obj for obj in image_qs]
+            life: int = 5 if image_list else 60
+            cache.set(cache_key, image_qs, life * 60)
+        if ajax_flag:
+            image_list: list = [line for line in image_list]
+            return JsonResponse({'status': True, 'image_list': image_list})
+
+        return rich_render(self.request, 'album_detail.html', context={"image_list": image_list})
+
+
+# class QueryImage(View):
+    # def get(self,request, ):
+
 
 
 class ImageView(VisitIncrMixin, View):

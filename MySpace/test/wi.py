@@ -4,44 +4,23 @@ __author__ = "Monkey"
 
 cache = {}
 
+THUMB_SIZE: tuple = (300, 300)
+file: str = os.path.split(self.img.path)[-1]
+file: str = create_unique_name(file, extend='png').replace(' ', '_')
+relative_path: str = str(os.path.join(settings.MEDIA_URL, 'thumb', file))
+abstract_path: str = str(os.path.join(settings.MEDIA_ROOT, 'thumb', file))
 
-def lush():
-    print('gengxinle ')
-    return 1
-
-
-class CacheFoo(object):
-
-    def __init__(self, key: str, value: object = None, time: int = 5, flush: bool = True, cache: object = cache, *args, **kwargs):
-
-        self._key: str = key
-        self._value: object = value
-        self._time: int = time
-        self._flush: bool = flush
-        self._cache: object = cache
-        self._stat = False
-
-    def __enter__(self):
-        """ 获取值 """
-
-        value = self._cache.get(self._key)
-        if value is not None:
-            self.value = value
-            self._stat = True
-        else:
-            self.value = None
-        return self
-
-    def get(self):
-        return self.value
+thumb: _Image.Image = _Image.open(self.img)
+rn = thumb.thumbnail(THUMB_SIZE)
+print(rn)
+thumb.save('hello.png')
+# write_test(abstract_path)
+# thumb.
 
 
+thumb.save(relative_path, 'PNG')
+print(relative_path, abstract_path)
+# thumb.seek(0)
+self.thumbnail = relative_path
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        """ 是否更新缓存 """
-        lush()
-
-
-with CacheFoo('money') as c:
-    print(c.get())
-
+super().save(*args, **kwargs)
