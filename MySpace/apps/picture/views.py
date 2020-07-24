@@ -10,7 +10,7 @@ class AlbumListView(NavViewMixin, ListView):
 
     model: 'model.Model' = Album
 
-    paginate_by: int = 2
+    paginate_by: int = 4
 
     template_name: str = 'album.html'
 
@@ -67,17 +67,12 @@ class AlbumDetailView(NavViewMixin, VisitIncrMixin, View):
 
             image_list: list = [obj for obj in image_qs]
             life: int = 5 if image_list else 60
-            cache.set(cache_key, image_qs, life * 60)
+            cache.set(cache_key, image_list, life * 60)
         if ajax_flag:
             image_list: list = [line for line in image_list]
             return JsonResponse({'status': True, 'image_list': image_list})
 
         return rich_render(self.request, 'album_detail.html', context={"image_list": image_list})
-
-
-# class QueryImage(View):
-    # def get(self,request, ):
-
 
 
 class ImageView(VisitIncrMixin, View):

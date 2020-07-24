@@ -3,11 +3,11 @@
 __author__ = "Monkey"
 
 import datetime
-from collections import Iterable
 from django.core.cache import cache
 from django.db.models import F
 from django.shortcuts import render
 from django.conf import settings
+from django.views.decorators.cache import cache_page
 
 
 def get_context(*args, **kwargs) -> dict:
@@ -112,6 +112,16 @@ class NavViewMixin(object):
         return context
 
 
+class CacheMixin(object):
+    cache_timeout: int = 60
+
+    def get_cache_timeout(self) -> int:
+        return self.cache_timeout
+
+    def dispatch(self, *args, **kwargs):
+        return cache_page(self.get_cache_timeout())(super(CacheMixin, self).dispatch)(*args, **kwargs)
+
+
 def rich_render(*args, **kwargs) -> render:
     """ 仅仅是将 render 方法套个壳，添加导航栏上下文数据 """
     context: dict = kwargs.get('context', None)
@@ -119,45 +129,6 @@ def rich_render(*args, **kwargs) -> render:
         kwargs['context'] = context = dict()
     context.update(get_context())
     return render(*args, **kwargs)
-
-
-class FlushCacheMixin(object):
-    """
-    自动更新缓存的混入 默认的会查找模型下定义的 cache_list 和
-    get_cache_list 的结果，递归的在缓存中删除他们。
-
-    cache name: Follow the rules:
-        type:<app_label>:<model_name>:[<list>:by:<key>:<id>|<detail>:<id>]
-        eg:
-            context:article:article:list:by:tag:tag_id
-            context:article:article:detail:article_id
-            context:article:article:list:by:date:2020-01
-            ...
-
-    """
-    cache_keys: Iterable = None
-
-    def get_cache_keys(self) -> set:
-        """
-        get_cache_keys 方法和 cache_keys 只能有一个生效，类似于 get_queryset 与 queryset,
-        当覆盖此方法时 queryset 属性可能会无效。
-        """
-
-        if self.cache_keys is not None:
-            cache_keys: Iterable = self.cache_keys
-            if not isinstance(cache_keys, Iterable):
-                raise TypeError(f'{self._meta.model_name}.cache_keys is not iterable!')
-        else:
-            cache_keys: set = set()
-        return cache_keys
-
-    def save(self, *args, **kwargs) -> None:
-
-        super(FlushCacheMixin, self).save(*args, **kwargs)
-        cache_set: set = self.get_cache_keys()
-        print(cache_set)
-        [cache.delete(key) for key in cache_set]
-
 
 
 class VisitIncrMixin(object):
@@ -185,7 +156,7 @@ class VisitIncrMixin(object):
             if hasattr(self, '_pk'):
                 pk = self._pk
             else:
-                raise (f'{self.__class__.__name__} must rely on a primary key flag or "_pk".')
+                raise KeyError(f'{self.__class__.__name__} must rely on a primary key flag or "_pk".')
         model: 'model.Model' = getattr(self, 'model')
 
         uid: str = request.uid
@@ -202,3 +173,18 @@ class VisitIncrMixin(object):
             if not ret:
                 # TODO: 查询了不存在的资源，判断是否是恶意请求。
                 pass
+
+
+class DangerousString(object):
+
+    def safe_string(self, string: str) -> str:
+        """ 敏感词检测
+        @type string: object
+        """
+        return string
+
+    def js_safe(self, string: str) -> bool:
+
+        return True
+
+dangerous = DangerousString()

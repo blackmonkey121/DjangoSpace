@@ -30,34 +30,43 @@
                 <li><a href='{% url 'life:cook_list' %}'>Cook</a></li>
             </ul>
         </li>
-        <li class='has-sub'><a href=''>Category</a>
+
+        <li class='has-sub'><a href='{% url 'article:article' %}'>Article</a>
+
+
             <ul>
-                {% for category in category_list %}
-                    <li><a href='{% url 'article:category' category.id %}'>{{ category.name }}</a></li>
-                {% endfor %}
+
+
+                <li class='has-sub'><a href="#">Category</a>
+                    <ul>
+                        {% for category in category_list %}
+                            <li><a href='{% url 'article:category' category.id %}'>{{ category.name }}</a></li>
+                        {% endfor %}
+
+                    </ul>
+                </li>
+                <li class='has-sub'><a href="#">Tag</a>
+                    <ul>
+                        {% for tag in tag_list %}
+                            <li><a href="{% url 'article:tag' tag.id %}">{{ tag.name }}</a></li>
+                        {% endfor %}
+
+                    </ul>
+                </li>
 
 
             </ul>
         </li>
-        <li class='has-sub'><a href=''>tag</a>
-            <ul>
-                {% for tag in tag_list %}
-                    <li><a href="{% url 'article:tag' tag.id %}">{{ tag.name }}</a></li>
-                {% endfor %}
 
-            </ul>
-        </li>
         <li class='has-sub'><a href=''>Archive</a>
-
-
             <ul>
                 {% for year, months in date_merge.items %}
 
                     <li class='has-sub'><a href="{% url 'article:archive' year 0 %}">{{ year }}年</a>
                         <ul>
                             {% for month in months %}
-                            <li><a href="{% url 'article:archive' year month %}">{{ month }} 月</a></li>
-                                {% endfor %}
+                                <li><a href="{% url 'article:archive' year month %}">{{ month }} 月</a></li>
+                            {% endfor %}
                         </ul>
                     </li>
 
@@ -66,9 +75,10 @@
                 {% endfor %}
             </ul>
         </li>
+
         <li class='has-sub'><a href='{% url 'travel:travel' %}'>Travel</a>
             <ul>
-                {% for province in province_list%}
+                {% for province in province_list %}
                     <li class='has-sub'><a href='{% url 'travel:province' province.id %}'>{{ province.name }}</a>
 
                         <ul>

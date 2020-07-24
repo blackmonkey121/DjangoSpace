@@ -8,34 +8,35 @@
     clear: right;
     height: 100px;
 }
-
 #main-center{
     width: 72%;
     color: white;
 }
-
 #main-right{
     width: 14%;
     height: 100px;
 }
-
 .para{
     line-height: 23px;
     letter-spacing: 1px;
     padding-left: 4px;
 }
-
 #background{
-    background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.5)), url("../img/article-background.jpg");
+    background-image: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.2)), url("../img/article-background.jpg");
     /*opacity: 0.5;*/
 }
-
+#day-cookie{
+    color: deepskyblue;
+    font-size: 24px;
+}
+#day-cookie span{
+    color: orange;
+}
 /* 文章列表页样式 */
 #article-list .article {
     padding: 28px 0;
     color: #555;
 }
-
 #article-list .article .title{
     margin: 20px 4px;
     border-left: 4px solid deepskyblue;
@@ -47,21 +48,18 @@
     transition: padding-left 0.4s;
 
 }
-
 #article-list .article .title:hover{
 
-    padding-left: 40px;
+    padding-left: 20px;
     border-left: 4px solid white;
     color: deepskyblue;
 }
-
 #article-list .article .footer{
     padding-top: 20px;
     border-bottom: 1px solid #fff;
     padding-bottom: 12px;
     padding-left: 20px;
 }
-
 /* 文章详情 */
 #article-detail #article-title{
     margin: 20px 4px;
@@ -71,136 +69,112 @@
     font-weight: 800;
     color: #004488;
 }
-
 #article-text {
     margin-top: 40px;
 }
-
 #article-decoration{
     border-bottom: 1px solid #004488;
     padding-bottom: 8px;
 }
-
 #article-decoration .tip{
     padding: 0 12px;
     font-size: 14px;
 }
-
 #article-decoration i{
     margin: 10px;
 }
-
 #tag{
     display: inline-block;
     border-bottom: 1px solid #004488;
     padding-bottom: 8px;
     margin: 16px 0;
 }
-
 .tag-elem{
     color: #2e6da4;
 }
-
 #article-detail{
     background-color: rgba(255, 255, 255, 0.9);
     padding: 18px;
 }
-
 #article-detail h2{
-    font-size: 28px;
-    margin: 40px 0 20px 0;
-    margin-left: 10px;
+    margin: -25px 0 5px 0;
+    padding: 65px 0 10px 0;
+    border-bottom: 1px solid #ccc;
+    font-size: 32px;
+    font-weight: 800;
     color: black;
-    border-left: 8px solid #ffaa00;
-    padding-left: 10px;
     -webkit-transition: color .3s ease-in-out;/* Safari 和 Chrome */
     -moz-transition: color .3s ease-in-out;/* Firefox */
     -o-transition: color .3s ease-in-out;/* Opera */
 
 }
-
 #article-detail h3{
-    font-size: 20px;
-    margin: 30px 0 15px 20px;
-    color: rgba(1, 50, 114, 0.81);
-    border-left: 4px solid deepskyblue;
-    padding-left: 10px;
+    margin: -35px 0 5px 0;
+    padding: 65px 0 10px 10px;
+    font-size: 26px;
+    font-weight: 500;
+    color: #222;
     -webkit-transition: color .3s ease-in-out;/* Safari 和 Chrome */
     -moz-transition: color .3s ease-in-out;/* Firefox */
     -o-transition: color .3s ease-in-out;/* Opera */
 
 }
-
 #article-detail h4{
+    margin: -55px 0 10px 0;
+    padding: 65px 0 0 20px;
+    font-weight: 500;
+    font-size: 24px;
     display: inline-block;
-    margin: 10px 0 10px 30px;
-    color: rgba(1, 79, 170, 0.81);
-    border-bottom: 2px solid #000000;
+    color: #666;
     -webkit-transition: color .3s ease-in-out;/* Safari 和 Chrome */
     -moz-transition: color .3s ease-in-out;/* Firefox */
     -o-transition: color .3s ease-in-out;/* Opera */
 }
-
 #article-detail h2:hover, #article-detail h3:hover, #article-detail h4:hover{
     color: deepskyblue;
 }
-
-
-#article-text>p, #article-text>blockquote, #article-text>ul, #article-text>ol{
-    color: #004488;
-    margin-left: 20px;
+#article-text>p, #article-text>blockquote, #article-text>ul, #article-text>ol, #article-text>table{
+    color: #445570;
+    margin-left: 30px;
     padding: 6px;
     font-weight: 400;
 }
-
 #article-text ul>li,#article-text ol>li{
     content: counter(item)".";
     list-style-type: decimal;
-    margin-left: 14px;
+    margin-right: 20px;
 }
-
+#article-text .son-img img{
+    max-width: 100%;
+    display: inline-block;
+}
 #article-text .son-img{
-    white-space: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
+    text-align: center;
 }
-
 #article-text>pre>code{
-    background-color: white;
+    background-color: #f2f2f2;
     border-radius: 4px;
-    margin: 0 18px;
+    margin: 0 0 0 30px;
     padding: 2px 10px;
 }
-
-#article-text table{
-       margin: 0 auto;
+#article-text th{
+    background-color: #5bc0de;
+    color: white;
+    padding: 8px 0;
 }
-
 #article-text td,th{
-    border: 2px solid #004488;
+    background-color:#f2f2f2;
+    border: 1px solid white;
     padding: 0 8px;
     font-weight: 400;
-    color: #eee;
-    -webkit-transition: all .4s ease-in-out;/* Safari 和 Chrome */
-    -moz-transition: all .4s ease-in-out;/* Firefox */
-    -o-transition: all .4s ease-in-out;/* Opera */
+    color: #444;
 }
-
-#article-text td:hover,th:hover{
-    color: white;
-    background-color: rgba(167, 255, 225, 0.24);
-}
-
 code{
     background: #f2f2f2;
     border-radius: 4px;
     color: #004488;
     padding: 0 3px 1px 3px;
-    box-shadow: 0 0 3px 1px rgba(1, 50, 114, 0.81);
-    margin: 0 4px;
-
-}
-
+    margin: 0 4px;}
 blockquote>p{
     border-left: 3px solid #ddd;
     font-size: 16px;
@@ -209,8 +183,40 @@ blockquote>p{
     font-style: oblique;
     color: #666;
 }
+/*  评论 */
+#comment .cmt_line{
+    margin-bottom: 4px;
+    border-bottom: 1px solid #e3e3e3;
+    padding: 10px 16px;
+    height: 110px;
+    line-height: 18px;
+    position: relative;
+    background: white;
+    color: #666;
+    font-size: 15px;
+}
+.cmt_line .cmt_avatar{
+    position: absolute;
+}
+.cmt_line .cmt_avatar img{
+    margin-top: 5px;
+    width: 100px;
+}
+.cmt_line .cmt_right{
+    position: absolute;
+    left: 120px;
+    padding: 10px;
+}
+.cmt_footer{
+    position: absolute;
+    color: #797979;
+    top: 110px;
+    font-size: 12px;
+    right: 20px;
+}
 
 #comment-text{
+
     background: white;
     color: #004488;
     resize: none;
@@ -222,12 +228,10 @@ blockquote>p{
     padding:8px 0 40px 8px;
     border: none;
 }
-
 #new_comment {
-    margin: 40px 6px 40px 0;
+    margin: 30px 6px 0 0;
     color: #004488;
 }
-
 #add_cmt_bar{
     background: white;
     border-top: 1px solid #004488;
@@ -237,8 +241,7 @@ blockquote>p{
     top:-40px;
     left: 1.5%;
 }
-
-.post-btn {
+#post-btn {
     background: deepskyblue;
     margin: 6px;
     padding: 4px;
@@ -246,7 +249,7 @@ blockquote>p{
     cursor: pointer;
     color: white;
 }
-.post-btn:hover{
+#post-btn:hover{
     background: white;
     color: deepskyblue;
     margin: 6px;
@@ -256,25 +259,24 @@ blockquote>p{
     border: 1px solid deepskyblue;
 }
 
-
+/* 目录 */
 #contentSidebar {
-    background-color: white;
     border: 1px solid #ddd;
-    width: 13%;
+    width: 13.5%;
     overflow: hidden;
     position: fixed;
-    top: 14%;
     right: 0;
     color: #555;
 }
-
 #ctt-head{
+    background-color: white;
+    font-weight: 700;
+    letter-spacing: 3px;
     border-bottom: 1px solid #ddd;
     width: 100%;
     text-align: center;
     padding: 10px 0;
 }
-
 #ctt-head i{
     position: relative;
     right: -24px;
@@ -285,16 +287,15 @@ blockquote>p{
     cursor: pointer;
     color: #aaa;
 }
-
 #ctt-body{
     padding: 10px 0;
-    height: 360px;
+    height: 410px;
     width: 100%;
+    background-color: rgba(255,255,255,0.7);
     overflow: hidden;
     overflow-y:scroll; /*总是显示纵向滚动条*/
     font-size: 14px;
 }
-/*滚动条样式*/
 #ctt-body::-webkit-scrollbar {
     width: 2px;
 }
@@ -308,15 +309,12 @@ blockquote>p{
     border-radius: 0;
     background: white;
 }
-
 #ctt-body p{
     margin-top: 8px;
     font-weight: 300;
     cursor: pointer;
 }
 #ctt-body p:hover {color: deepskyblue} /* 鼠标悬浮在上的链接 */
-
-
 #ctt-body .cls-h2{
     margin-left: 4px;
     font-weight: 500;
@@ -327,7 +325,6 @@ blockquote>p{
 #ctt-body .cls-h4{
     margin-left: 44px;
 }
-
 #bottom-tool{
     position: fixed;
     right: 9.5%;
@@ -344,7 +341,54 @@ blockquote>p{
 #bottom-tool div:hover{
     color: deepskyblue;
 }
-
 #toTop{
     display: none;
+}
+
+#leftSideBar{
+    position: fixed;
+    width: 13.5%;
+}
+.left_side_block{
+    background-color: rgba(255,255,255,0.7);
+    border: 1px solid #ddd;
+    position: relative;
+    left: 0;
+    color: #555;
+    margin-bottom: 10px;
+}
+.left_side_block a:hover{
+    color: #5bc0de;
+}
+#sidebar_tag li{
+    display: inline-block;
+    font-size: 14px;
+    background-color: #5bc0de;
+    color: white;
+    padding: 3px;
+    border-radius: 3px;
+}
+.rlt-head{
+    background-color: white;
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    font-weight: 700;
+    letter-spacing: 8px;
+}
+.rlt-head i{
+    position: relative;
+    right: -24px;
+}
+.rlt-head i:hover{
+    position: relative;
+    right: -24px;
+    cursor: pointer;
+    color: #aaa;
+}
+.rlt-body li{
+    font-size: 16px;
+    font-weight: 300;
+    margin: 6px;
 }

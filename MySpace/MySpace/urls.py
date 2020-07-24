@@ -36,6 +36,7 @@ urlpatterns = [
     path('life/', include(('apps.life.urls', 'life'), namespace='life')),
     path('article/', include(('apps.article.urls', 'article'), namespace='article')),
     path('travel/', include(('apps.travel.urls', 'travel'), namespace='travel')),
+    path('comment/', include(('apps.comment.urls', 'comment'), namespace='comment')),
     path('mdeditor/', include(('mdeditor.urls', 'mdeditor'), namespace='mdeditor')),
 
     path('category-autocomplete/', CategoryAutoComplete.as_view(), name='category-autocomplete'),

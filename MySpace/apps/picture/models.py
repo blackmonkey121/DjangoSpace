@@ -1,8 +1,6 @@
 from django.conf import settings
-from django.core.cache import cache
 from django.db import models
 from PIL import Image as _Image
-import time
 import os
 
 from ..utils.basemodel import BaseModel, VisitBaseModel, FileManager
@@ -16,12 +14,11 @@ class Album(VisitBaseModel):
     desc = models.CharField(max_length=512, verbose_name='描述')
     cover = models.ImageField(upload_to="picture/%Y/%m/%d/", verbose_name="封面", blank=True)
 
-    def get_cache_keys(self) -> set:
-
-        ret_set: set = {
+    def flush_cache_keys(self) -> dict:
+        self.CACHE_DICT['keys'] = {
             f'context:{self._meta.app_label}:{self._meta.model_name}:list',
         }
-        return ret_set
+        return self.CACHE_DICT
 
     def save(self, *args, **kwargs) -> None:
         """

@@ -10,26 +10,85 @@
 
 {% block article-css %}
     <link rel="stylesheet" href="{% static 'css/googlecode.css' %}">
-    <link rel="stylesheet" href="{% static 'font-awesome-4.7.0/css/font-awesome.min.css' %}">
+{% endblock %}
+
+{% load static %}
+
+{% block main-left %}
+    <!-- 边栏数据 -->
+    <div id="leftSideBar">
+
+        <div id="sidebar_tag" class="left_side_block">
+            <p class="rlt-head"> 分类标签 <i class="fa fa-minus" aria-hidden="true"></i></p>
+            <ul class="rlt-body">
+                {% for tag in tag_list %}
+                    <li><i class="fa fa-paperclip" aria-hidden="true"></i> <a
+                            href='{% url 'article:tag' tag.id %}'>{{ tag.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div id="sidebar_category" class="left_side_block">
+            <p class="rlt-head"> 文章分类 <i class="fa fa-minus" aria-hidden="true"></i></p>
+            <ul class="rlt-body">
+                {% for category in category_list %}
+                    <li><i class="fa fa-tags" aria-hidden="true"></i> <a
+                            href='{% url 'article:category' category.id %}'>{{ category.name }}</a></li>
+                {% endfor %}
+            </ul>
+
+        </div>
+
+        <div id="sidebar_hot" class="left_side_block">
+            <p class="rlt-head"> 最热文章 <i class="fa fa-minus" aria-hidden="true"></i></p>
+            <ul class="rlt-body">
+                {% for article in article_hot %}
+                    <li><a href="{% url "article:detail" article.id %}">{{ article.title }}</a></li>
+                {% endfor %}
+
+            </ul>
+        </div>
+
+        <div id="sidebar_new" class="left_side_block">
+            <p class="rlt-head"> 最新推荐 <i class="fa fa-chevron-down" aria-hidden="true"></i></p>
+            <ul class="rlt-body" hidden>
+                {% for article in article_new %}
+                    <li><a href="{% url "article:detail" article.id %}">{{ article.title }}</a></li>
+                {% endfor %}
+
+            </ul>
+        </div>
+
+        <div id="sidebar_archive" class="left_side_block">
+            <p class="rlt-head"> 文章归档 <i class="fa fa-chevron-down" aria-hidden="true"></i></p>
+            <ul class="rlt-body" hidden>
+                {% for year, months in date_merge.items %}
+
+                    <li class='has-sub'><a href="{% url 'article:archive' year 0 %}">{{ year }}年</a>
+                        <ul>
+                            {% for month in months %}
+                                <li><a href="{% url 'article:archive' year month %}">{{ month }} 月</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+
+
+
+                {% endfor %}
+            </ul>
+        </div>
+
+
+    </div>
+
+
 {% endblock %}
 
 
-
 {% block main-center %}
-<!-- 边栏数据 -->
-    <div id="contentSidebar">
-        <p id="ctt-head">CONTENTS<i class="fa fa-times" aria-hidden="true"></i></p>
-        <div id="ctt-body"></div>
-    </div>
-
-    <div id="bottom-tool">
-    <div id="toTop"><i class="fa fa-arrow-up" aria-hidden="true"></i></div>
-    <div id="showContent"><i class="fa fa-list" aria-hidden="true"></i></div>
-    <div id="sendEmail"><a href="mailto:931976722@qq.com"><i class="fa fa-envelope-o" aria-hidden="true"></i></a></div>
-    </div>
-
-<!-- 附加数据 -->
+    <!-- 附加数据 -->
     <div id="page_data" data-article_id="{{ article.id }}"></div>
+    {% csrf_token %}
 
 
     <div id="article-detail">
@@ -42,8 +101,9 @@
 
             <div id="cookies">
                 <span class="tip c-black b-white">原创</span>
-                <span class="tip c-black b-white">分类</span><span
-                    class="tip b-error c-white">{{ article.category }}</span>
+                <span class="tip c-black b-white">分类</span>
+                <span class="tip b-error c-white"><a
+                        href="{% url 'article:category' article.category__id %}">{{ article.category__name }}</a></span>
                 <span class="tip c-black b-white">发布</span><span
                     class="tip b-info c-white">{{ article.create_time }}</span>
                 <span class="tip c-black b-white">阅读</span><span
@@ -53,8 +113,8 @@
             <div id="tag" class="float-r">
                 <span class="tip b-info">Tags</span> <i></i>
 
-                {% for t in tag %}
-                    <span class="tag-elem">{{ t }}</span> <i></i>
+                {% for tag in tags %}
+                    <span class="tag-elem"><a href="{% url 'article:tag' tag.id %}">{{ tag.name }}</a></span> <i></i>
                 {% endfor %}
 
             </div>
@@ -67,27 +127,54 @@
         </div>
 
     </div>
+
     <div id="new_comment">
 
 
-            <textarea name="comment" id="comment-text" maxlength="255" placeholder="@评论："></textarea>
-            <p id="add_cmt_bar">
-                <span id="post-btn">发表</span>
-                <span>word</span>:<span id="num-word"></span>
-            </p>
-        </div>
+        <textarea name="comment" id="comment-text" maxlength="256" placeholder="@评论："></textarea>
+        <p id="add_cmt_bar">
+            <span id="post-btn"><i class="fa fa-paper-plane" aria-hidden="true"></i> 发表</span>
+            <span>word</span>:<span id="num-word"></span>
+        </p>
+    </div>
 
     <div id="comment">
-        {% if comment %}
-            {% for k, v in comment.items %}
-                <p>{{ k }}{{ v.0 }}{{ v.1 }}</p>
 
-            {% endfor %}
-        {% endif %}
+        {% for comment in comment_list %}
+            <div class="cmt_line">
+                <div class="cmt_avatar">
+                    <img src="{% static 'img/AVATAR.png' %}" alt="">
+                </div>
+                <div class="cmt_right">
+                    <div class="cmt_text">{{ comment.context | truncatechars:326 }}</div>
+                </div>
+                <div class="cmt_footer">
+                    <span hidden>{{ comment.id }}</span>
+                    <span class="cmt_time"><i class="fa fa-clock-o"
+                                              aria-hidden="true"></i> {{ comment.create_time }}</span>
+                    <span></span>
+                </div>
+            </div>
+        {% empty %}
 
+        {% endfor %}
+    </div>
 
+{% endblock %}
+
+{% block main-right %}
+    <!-- 边栏数据 -->
+    <div id="contentSidebar">
+        <p id="ctt-head"> CONTENTS<i class="fa fa-times" aria-hidden="true"></i></p>
+        <div id="ctt-body"></div>
+    </div>
+
+    <div id="bottom-tool">
+        <div id="toTop"><i class="fa fa-arrow-up" aria-hidden="true"></i></div>
+        <div id="showContent"><i class="fa fa-list" aria-hidden="true"></i></div>
+        <div id="sendEmail"><a href="mailto:931976722@qq.com"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>
         </div>
-
+    </div>
 {% endblock %}
 
 {% block article-js %}

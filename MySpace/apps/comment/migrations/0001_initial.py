@@ -27,6 +27,6 @@ class Migration(migrations.Migration):
             options={
                 'abstract': False,
             },
-            bases=(apps.utils.mixin.FlushCacheMixin, models.Model),
+            bases=(models.Model,),
         ),
     ]

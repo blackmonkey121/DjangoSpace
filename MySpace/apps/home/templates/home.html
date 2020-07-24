@@ -15,6 +15,7 @@ Monkey的个人站点
     <link rel="stylesheet" href="{% static '/css/slick.css' %}">
     <link rel="stylesheet" href="{% static '/css/index.css' %}">
     <link rel="stylesheet" href="{% static '/css/jquery.fullPage.css' %}">
+    <link rel="stylesheet" href="{% static 'font-awesome-4.7.0/css/font-awesome.min.css' %}">
 
 {% endblock %}
 
@@ -29,10 +30,10 @@ Monkey的个人站点
                 <div class="inner">
                     <div class="block_txt">
                         <h4>With Dream, Focus On Life!</h4>
-                        <h2><a href="">Picture:</a> 怀揣<span>梦想</span> | 专注 <span> 生活</span></h2>
+                        <h2><a href="{% url 'picture:album' %}">Picture:</a> 怀揣<span>梦想</span> | 专注 <span> 生活</span></h2>
                         <h3>
                             <div style="text-align:center;margin:50px 0; font:normal 14px/24px 'MicroSoft YaHei';">
-                                <p>欢迎来到我的个人站点，我是 Clark·Monkey</p>
+                                <p>欢迎来到我的个人站点，我是 <a href="{% url 'home:me' %}">Clark·Monkey</a></p>
                             </div>
                         </h3>
                     </div>
@@ -43,7 +44,7 @@ Monkey的个人站点
                 <div class="inner">
                     <div class="block_txt">
                         <h4> Goodliness,to be continued</h4>
-                        <h2><a href="">Life:</a> 让<span>美好持续</span>发生</h2>
+                        <h2><a href="{% url 'life:life' %}">Life:</a> 让<span>美好持续</span>发生</h2>
                         <h3>保持微笑，保持热泪盈眶的真实～</h3>
                     </div>
                 </div>
@@ -53,7 +54,7 @@ Monkey的个人站点
                 <div class="inner">
                     <div class="block_txt">
                         <h4>Do one thing and do it well！</h4>
-                        <h2><a href="">Technology：</a>每次<span>只做一件事</span>把它做到极致。</h2>
+                        <h2><a href="{% url 'article:article' %}"> Technology：</a>每次<span>只做一件事</span>把它做到极致。</h2>
                         <h3>——最不务正业的Coder.</h3>
                     </div>
                 </div>
@@ -63,7 +64,7 @@ Monkey的个人站点
                 <div class="inner">
                     <div class="block_txt">
                         <h4>Life is a journey, enjoy every encounter and parting.</h4>
-                        <h2><a href="">Travel:</a> 不知风云 <span> 起落</span> ｜ 只见 <span>行色匆匆</span></h2>
+                        <h2><a href="{% url 'travel:travel' %}">Travel:</a> 不知风云 <span> 起落</span> ｜ 只见 <span>行色匆匆</span></h2>
                         <h3>一直在路上</h3>
                     </div>
                 </div>
@@ -73,7 +74,7 @@ Monkey的个人站点
                 <div class="inner">
                     <div class="block_txt">
                         <h4>About Me</h4>
-                        <h2><a href="">About Me:</a> 关于 <span>我</span></h2>
+                        <h2><a href="{% url 'home:me' %}">About Me:</a> 关于 <span>我</span></h2>
                         <h3>工作、学习、生活、个人自述</h3>
                     </div>
                 </div>
@@ -114,30 +115,14 @@ Monkey的个人站点
 
             <div id="picture-area" class="clearfix">
 
-                <div class="img">
-                    <img src="{% static 'img/home_background.jpg' %}" alt="">
-                </div>
-                <div class="img">
-                    <img src="{% static 'img/home_background.jpg' %}" alt="">
-                </div>
-                <div class="img">
-                    <img src="{% static 'img/home_background.jpg' %}" alt="">
-                </div>
-                <div class="img">
-                    <img src="{% static 'img/home_background.jpg' %}" alt="">
-                </div>
-                <div class="img">
-                    <img src="{% static 'img/home_background.jpg' %}" alt="">
-                </div>
-                <div class="img">
-                    <img src="{% static 'img/home_background.jpg' %}" alt="">
-                </div>
-                <div class="img">
-                    <img src="{% static 'img/home_background.jpg' %}" alt="">
-                </div>
-                <div class="img">
-                    <img src="{% static 'img/home_background.jpg' %}" alt="">
-                </div>
+
+                {% for album in album_list %}
+                    <div class="img">
+                        <a href="{% url 'picture:album_detail' album.id %}">
+                            <img src="/media/{{ album.cover }}" alt="">
+                        </a>
+                    </div>
+                {% endfor %}
 
             </div>
 
@@ -146,41 +131,36 @@ Monkey的个人站点
     </div>
 
     <div class="section section3">
-
         <div id="home-article" class="clearfix">
-            <a style="text-decoration:none;" href="{% url 'article:article' %}"><span id="article-btn" class="page-btn">博文</span></a>
+            <a style="text-decoration:none;" href="{% url 'article:article' %}">
+                <span id="article-btn" class="page-btn">博文</span>
+            </a>
             <div class="article-block hot">
                 <div class="block-name">最热文章</div>
                 <ul>
-                    <li><a href="#">Python中 re 的过程</a></li>
-                    <li><a href="#">JVM 底层原理</a></li>
-                    <li><a href="#">微服务概述</a></li>
-                    <li><a href="#">Django 框架</a></li>
-                    <li><a href="#">Flask的过程</a></li>
-                    <li><a href="#">C++的过程</a></li>
+                    {% for article in article_hot %}
+                        <li><a href="{% url 'article:detail' article.id %}">{{ article.title | truncatechars:'16' }}1</a></li>
+                    {% endfor %}
+
                 </ul>
             </div>
             <div class="article-block new">
                 <div class="block-name">最新文章</div>
+
                 <ul>
-                    <li><a href="#">Python中 re 的过程</a></li>
-                    <li><a href="#">JVM 底层原理</a></li>
-                    <li><a href="#">微服务概述</a></li>
-                    <li><a href="#">Django 框架</a></li>
-                    <li><a href="#">Flask的过程</a></li>
-                    <li><a href="#">C++的过程</a></li>
+                    {% for article in article_new %}
+                        <li><a href="{% url 'article:detail' article.id %}">{{ article.title | truncatechars:'16' }}</a></li>
+                    {% endfor %}
 
                 </ul>
+
             </div>
-            <div class="article-block featured">
-                <div class="block-name">每日推文</div>
+            <div class="article-block tag">
+                <div class="block-name">标签</div>
                 <ul>
-                    <li><a href="#">Python中 re 的过程</a></li>
-                    <li><a href="#">JVM 底层原理</a></li>
-                    <li><a href="#">微服务概述</a></li>
-                    <li><a href="#">Django 框架</a></li>
-                    <li><a href="#">Flask的过程</a></li>
-                    <li><a href="#">C++的过程</a></li>
+                    {% for tag in tag_list %}
+                        <li class="float-l"><span><i class="fa fa-tag" aria-hidden="true"></i></span><a href="{% url 'article:tag' tag.id %}"> {{ tag.name | truncatechars:'16' }}</a></li>
+                    {% endfor %}
 
                 </ul>
             </div>

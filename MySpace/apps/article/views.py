@@ -1,17 +1,20 @@
-from django.core.cache import cache
+import datetime
+
 from django.db.models import QuerySet
 from django.views.generic.base import View
-
 from django.views.generic.list import ListView
 
 from .models import Article
+from ..comment.models import ArticleComment
 from ..utils.mixin import NavViewMixin, VisitIncrMixin, rich_render
-import datetime
+from ..utils.tools import proxy_query
 
 
 class ArticleView(NavViewMixin, ListView):
     """ 抽象类 """
     paginate_by = 10
+
+    allow_empty = True
 
     context_object_name: str = "article_list"
 
@@ -30,33 +33,30 @@ class ArticleView(NavViewMixin, ListView):
         qs: QuerySet = self.model.objects.filter()
 
         # 看是否有其他过滤条件，过滤查询集合
-        _filter: dict = kwargs.get('filter')
+        query_filter: dict = kwargs.get('query_filter')
         # 看是否有自定义的查询字段
-        _fields: tuple = kwargs.get('fields')
+        fields: tuple = kwargs.get('fields')
 
-        if isinstance(_filter, dict):
-            qs = qs.filter(**_filter)
+        order_by = kwargs.get('order') or '-id'
 
-        fields: tuple = _fields or self.fields
+        if isinstance(query_filter, dict):
+            qs = qs.filter(**query_filter)
+
+        fields: tuple = fields or self.fields
 
         # 一次SQL查询完所有值, 防止在模版中遍历 执行n次 SQL查询
-        return qs.values(*fields)
+        return qs.values(*fields).order_by(order_by)
 
 
 class ArticleListView(ArticleView):
     """ 文章列表试图 """
 
-    def get(self, request, *args, **kwargs):
-        return super(ArticleListView, self).get(request, *args, **kwargs)
-
     def get_queryset(self, *args, **kwargs) -> QuerySet:
-        cache_key: str = f'context:{self.model._meta.app_label}:{self.model._meta.model_name}:list'
-        qs: QuerySet = cache.get(cache_key)
 
-        if not qs:
-            qs: QuerySet = super(ArticleListView, self).get_queryset(*args, **kwargs)
-            cache.set(cache_key, qs, 3600)
-        return qs
+        # 缓存键
+        cache_key: str = f'context:{self.model._meta.app_label}:{self.model._meta.model_name}:list'
+        func = super(ArticleListView, self).get_queryset
+        return proxy_query(key=cache_key, func=func, timeout=3600)
 
 
 class CategoryListView(ArticleView):
@@ -65,18 +65,11 @@ class CategoryListView(ArticleView):
     def get_queryset(self) -> QuerySet:
 
         category_id: int = self.kwargs.get('id')
-        if not category_id:
-            raise KeyError('Category id is must be required！')
-
         cache_key: str = f'context:{self.model._meta.app_label}:{self.model._meta.model_name}:list:by:category:{category_id}'
-        qs: QuerySet = cache.get(cache_key)
+        query_filter: dict = {'category': category_id}
+        func = super(CategoryListView, self).get_queryset
 
-        if not qs:
-            _filter: dict = {'category': category_id}
-            qs: QuerySet = super(CategoryListView, self).get_queryset(filter=_filter)
-            life: int = 5 if qs.exists() else 60  # 防 redis 穿透 即使是错的 id 也要缓存一个值 拦截恶意攻击
-            cache.set(cache_key, qs, life * 60)
-        return qs
+        return proxy_query(key=cache_key, func=func, query_filter=query_filter)
 
 
 class TagListView(ArticleView):
@@ -85,28 +78,17 @@ class TagListView(ArticleView):
     def get_queryset(self) -> QuerySet:
 
         tag_id: int = self.kwargs.get('id')
-        if not tag_id:
-            raise KeyError('Tag id is must be required！')
-
-        # 查缓存
         cache_key: str = f'context:{self.model._meta.app_label}:{self.model._meta.model_name}:list:by:tag:{tag_id}'
-        qs: QuerySet = cache.get(cache_key)
+        query_filter: dict = {'tag': tag_id}
+        func = super(TagListView, self).get_queryset
 
-        if not qs:
-            # 缓存 miss 执行SQL
-            _filter: dict = {'tag': tag_id}
-            qs: QuerySet = super(TagListView, self).get_queryset(filter=_filter)
-            # 按查询照结果 更新缓存
-            life: int = 5 if qs.exists() else 60
-            cache.set(cache_key, qs, life * 60)
-
-        return qs
+        return proxy_query(key=cache_key, func=func, query_filter=query_filter)
 
 
 class ArchiveListView(ArticleView):
     """  List of articles by create time. """
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
 
         year: int = self.kwargs.get('year', 2019)
         month: int = self.kwargs.get('month', 0)
@@ -119,16 +101,12 @@ class ArchiveListView(ArticleView):
         else:
             start: datetime.date = datetime.date(year, 1, 1)
             end: datetime.date = datetime.date(year, 12, 31)
+        # 拼接cache键
         cache_key: str = f'{start}-{end}'
-        qs: QuerySet = cache.get(cache_key)
+        func = super(ArchiveListView, self).get_queryset
+        query_filter: dict = {'create_time__range': (start, end)}  # 过滤条件
 
-        _filter: dict = {'create_time__range': (start, end)}
-
-        if not qs:
-            qs: QuerySet = super(ArchiveListView, self).get_queryset(filter=_filter)
-            life: int = 5 if qs.exists() else 60
-            cache.set(cache_key, qs, life * 60)
-        return qs
+        return proxy_query(key=cache_key, func=func, query_filter=query_filter)
 
 
 class ArticleDetailView(VisitIncrMixin, View):
@@ -136,61 +114,104 @@ class ArticleDetailView(VisitIncrMixin, View):
     template_name = 'article_detail.html'
     model = Article
 
-    def get(self, request, *args, **kwargs) -> 'TemplateResponse':
+    def get(self, request, *args, **kwargs) -> 'HttpResponse':
+
         article_id = self._pk = kwargs.get('id')
-
+        # 获取文章详情和标签信息
         cache_key: str = f'context:{self.model._meta.app_label}:{self.model._meta.model_name}:detail:{article_id}'
-        context: dict = cache.get(cache_key)
+        context: dict = proxy_query(key=cache_key, func=self.query_article, article_id=article_id)
 
-        if not context:  # 缓存未命中
-            from django.db import connection
-            # FIXME: 优化SQL索引, 使用存储过程
-            SQL: str = """
-                select aa.id, aa.title, aa.create_time, aa.visit, aa.content_html, ac.name,at.name, ca.id, ca.context, ca.create_time
-                from article_article as aa
-                left join article_article_tag as aat on aa.id = aat.article_id
-                left join article_category ac on aa.category_id = ac.id
-                left join comment_articlecomment ca on aa.id = ca.article_id
-                left join article_tag as at on aat.tag_id = at.id
-                where aa.id = '%s'"""
+        # 获取文章评论（因为评论信息改动较为频繁，且需要尽可能快的更新，so 单独缓存）
+        cache_key: str = f'context:{self.model._meta.app_label}:{self.model._meta.model_name}:comment:{article_id}'
+        comment_qs: list = proxy_query(key=cache_key, func=self.query_comment, article_id=article_id)
 
-            with connection.cursor() as cursor:
-                cursor.execute(SQL, article_id)
-                ret: tuple = cursor.fetchall()
+        # 最热文章
+        cache_key: str = f'context:{self.model._meta.app_label}:{self.model._meta.model_name}:hot'
+        article_hot: QuerySet = proxy_query(key=cache_key, func=self.model.query_hot_article, count=10)
 
-            if ret:                     # 如果查询集不为空
-                article = dict()
-                tag: set = set()
-                comment: dict = dict()
+        # 最新文章
+        cache_key: str = f'context:{self.model._meta.app_label}:{self.model._meta.model_name}:new'
+        article_new: QuerySet = proxy_query(key=cache_key, func=self.model.query_new_article, count=10)
 
-                article['id'] = ret[0][0]
-                article['title'] = ret[0][1]
-                article['create_time'] = ret[0][2]
-                article['visit'] = ret[0][3]
-                article['content_html'] = ret[0][4]
-                article['category'] = ret[0][5]
+        # 相关推荐
 
-                # 遍历sql得到的数据表转化为模版友好的数据结构
-                for line in ret:
-                    tag.add(line[6])
-                    comment.update({line[7]: (line[8], line[9])})
+        # 拼接上下文
+        context.update({'comment_list': comment_qs})   # 评论列表
+        context.update({'article_hot': article_hot})   # 最热文章
+        context.update({'article_new': article_new})   # 最新文章
 
-                context: dict = {
-                    'article': article,
-                    'tag': tag,
-                }
 
-                if list(comment)[0] is not None:   # 如果没有评论数据，就不传给模版上下文
-                    context.update(
-                        {'comment': comment}
-                    )
-
-                life: int = 60
-            else:
-                life: int = 5  # 缓存未命中，SQL查询为空 ---> 不合法URL 创建临时缓存
-
-            cache.set(cache_key, context, life * 60)
-
+        # 添加浏览
         response = rich_render(request, 'article_detail.html', context=context, *args, **kwargs)
         self.handle_visited(request, *args, **kwargs)   # 增加访问
         return response
+
+    def query_article(self, article_id, *args, **kwargs) -> dict:
+        """
+        查询文章详情
+        @param article_id:  文章ID
+        @return: QuerySet 文章详情 带文章标签
+        """
+        fields: tuple = (
+            'id', 'title', 'content_html', 'create_time', 'visit', 'content_html',
+            'category__id', 'category__name', 'tag__id', 'tag__name',
+        )
+
+        if hasattr(self, '_pk'):
+            article_id: int = getattr(self, '_pk')
+
+        query: QuerySet = Article.objects.filter(id=article_id).prefetch_related('tag').select_related('category').values(*fields)
+        article: dict = dict()
+        tag_list: list = list()
+        for record in query.iterator():
+            if not article:
+                article = record
+            tag_list.append({'id': record.get('tag__id'), 'name': record.get('tag__name')})
+
+        return {'article': article, 'tags': tag_list}
+
+    def query_comment(self, article_id, *args, **kwargs) -> QuerySet:
+        """
+        查询评论
+        @param article_id: 文章ID  type:int
+        @return: 可见评论查询集  type: QuerySet
+        """
+        fields: tuple = ('id', 'create_time', 'context')
+        if hasattr(self, '_pk'):
+            article_id: int = getattr(self, '_pk')
+
+        query: QuerySet = ArticleComment.objects.filter(article_id=article_id).values(*fields)
+        return query
+
+    # @staticmethod
+    # def query_hot_article() -> QuerySet:
+    #     """
+    #     最热文章
+    #     @return:
+    #     """
+    #     fields: tuple = ('id', 'title', 'visit')
+    #     query: QuerySet = Article.objects.values(*fields).order_by('-visit')[:10]
+    #     return query
+    #
+    # @staticmethod
+    # def query_new_article() -> QuerySet:
+    #     """
+    #     最新文章
+    #     @return:
+    #     """
+    #     fields: tuple = ('id', 'title')
+    #     query: QuerySet = Article.objects.values(*fields).order_by('-id')[:10]
+    #     return query
+
+    # @staticmethod
+    # def query_top_article() -> QuerySet:
+    #     """
+    #     置顶
+    #     @return:
+    #     """
+    #
+    # def query_recommend_article(self) -> QuerySet:
+    #     """
+    #     相似度推荐
+    #     @return:
+    #     """

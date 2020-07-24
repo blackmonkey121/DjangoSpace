@@ -12,7 +12,7 @@
 
     <div id="article-list">
 
-        <div>每日寄语：专注是一种习惯！</div>
+        <div id="day-cookie">Cookie:<span>专注是一种习惯！</span></div>
 
         {% for article in article_list %}
 
@@ -30,10 +30,10 @@
 
                 <div class="footer float-r">
 
-                    <span class="head-tip">作者</span><span class="author end-tip">Clark Monkey</span>
-                    <span class="head-tip">发布于</span><span class="release end-tip">{{ article.create_time }}</span>
-                    <span class="head-tip">分类</span><span class="category end-tip">{{ article.category__name }}</span>
-                    <span class="head-tip">阅览</span><span class="category end-tip">{{ article.visit }}</span>
+                    <span class="head-tip"><i class="fa fa-user" aria-hidden="true"></i> 作者</span><span class="author end-tip">Clark Monkey</span>
+                    <span class="head-tip"><i class="fa fa-paper-plane" aria-hidden="true"></i> 发布于</span><span class="release end-tip">{{ article.create_time }}</span>
+                    <span class="head-tip"><i class="fa fa-tags" aria-hidden="true"></i> 分类</span><span class="category end-tip">{{ article.category__name }}</span>
+                    <span class="head-tip"><i class="fa fa-eye" aria-hidden="true"></i> 阅览</span><span class="category end-tip">{{ article.visit }}</span>
 
                 </div>
 

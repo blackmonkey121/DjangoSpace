@@ -4,7 +4,8 @@ __author__ = "Monkey"
 
 
 from django.urls import path
+from .views import ArticleCommentView
 
 urlpatterns = [
-    # path('admin/', admin.site.urls),
+    path('article/<int:article_id>/', ArticleCommentView.as_view(), name="comment"),
 ]
