@@ -62,17 +62,20 @@
     $(document).ready(function () {
 
         $(document).ready(function () {
-            $("#menu").menumaker({
+            let $menu = $('#menu')
+            let $menuLi = $('#menu > ul > li')
+
+            $menu.menumaker({
                 title: "Menu",
                 format: "multitoggle"
             });
 
-            $("#menu").prepend("<div id='menu-line'></div>");
+            $menu.prepend("<div id='menu-line'></div>");
 
             var foundActive = false, activeElement, linePosition = 0, menuLine = $("#menu #menu-line"), lineWidth,
                 defaultPosition, defaultWidth;
 
-            $("#menu > ul > li").each(function () {
+            $menuLi.each(function () {
                 if ($(this).hasClass('active')) {
                     activeElement = $(this);
                     foundActive = true;
@@ -90,7 +93,7 @@
             menuLine.css("width", lineWidth);
             menuLine.css("left", linePosition);
 
-            $("#menu > ul > li").hover(function () {
+            $menuLi.hover(function () {
                     activeElement = $(this);
                     lineWidth = activeElement.width();
                     linePosition = activeElement.position().left;
@@ -101,9 +104,6 @@
                     menuLine.css("left", defaultPosition);
                     menuLine.css("width", defaultWidth);
                 });
-
         });
-
-
     });
 })(jQuery);

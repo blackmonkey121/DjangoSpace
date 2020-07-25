@@ -30,13 +30,8 @@
                 <li><a href='{% url 'life:cook_list' %}'>Cook</a></li>
             </ul>
         </li>
-
         <li class='has-sub'><a href='{% url 'article:article' %}'>Article</a>
-
-
             <ul>
-
-
                 <li class='has-sub'><a href="#">Category</a>
                     <ul>
                         {% for category in category_list %}
@@ -58,7 +53,7 @@
             </ul>
         </li>
 
-        <li class='has-sub'><a href=''>Archive</a>
+        <li class='has-sub'><a href='{% url 'article:article' %}'>Archive</a>
             <ul>
                 {% for year, months in date_merge.items %}
 

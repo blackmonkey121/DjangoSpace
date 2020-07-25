@@ -60,6 +60,14 @@
     padding-bottom: 12px;
     padding-left: 20px;
 }
+
+#page{
+    margin-top: 20px;
+    color: white;
+    position: relative;
+    bottom: 20px;
+    left: 76%;
+}
 /* 文章详情 */
 #article-detail #article-title{
     margin: 20px 4px;

@@ -10,7 +10,7 @@ class AlbumListView(NavViewMixin, ListView):
 
     model: 'model.Model' = Album
 
-    paginate_by: int = 4
+    paginate_by: int = 8
 
     template_name: str = 'album.html'
 

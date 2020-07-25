@@ -14,3 +14,45 @@
 #background{
     background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),url("../img/life-background.jpg");
 }
+#verify{
+    margin-left: 30%;
+    font-size: 24px;
+    color: white;
+}
+
+#verify input{
+    padding-left: 5px;
+    border: 1px solid white;
+    border-radius: 4px;
+    outline: none;
+    width: 300px;
+    height: 26px;
+}
+
+#verify-btn{
+    padding: 1px 8px;
+    margin-top: 4px;
+    background-color: #5bc0de;
+    border: 1px solid #5bc0de;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    bottom: -3px;
+}
+#verify-btn:hover{
+    font-size: 24px;
+    color: #5bc0de;
+    background-color: white;
+    border: 1px solid #5bc0de;
+}
+#tips{
+    margin-left: 50%;
+    position: relative;
+    font-size: 18px;
+    color: #666666;
+    text-decoration: underline;
+    top: 110px;
+
+}
+

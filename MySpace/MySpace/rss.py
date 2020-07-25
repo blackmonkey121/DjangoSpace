@@ -22,7 +22,7 @@ class LastesPostFeed(Feed):
     description = "ClarkMonkey 技术站"
 
     def items(self):
-        return Article.objects.filter(status=Article.STATUS_NORMAL)[:10]
+        return Article.objects.filter()[:10]
 
     def item_title(self, item):
         return item.title
@@ -34,7 +34,7 @@ class LastesPostFeed(Feed):
         return reverse('article:detail', args=[item.pk])
 
     def item_extra_kwargs(self, item):
-        return {'content_html':self.item_content_html(item)}
+        return {'content_html': self.item_content_html(item)}
 
     def item_content_html(self, item):
         return item.content_html

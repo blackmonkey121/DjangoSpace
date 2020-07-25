@@ -9,7 +9,9 @@
 
 #main-right{
     width: 80%;
-    height: 100px;
+    /*height: 100px;*/
+    position: relative;
+
 }
 
 #background{
@@ -18,12 +20,7 @@
 
 
 /* 侧边列表 */
-
-#picture-menu{
-    margin-top: 100px;
-}
-
-#picture-menu li{
+#picture-menu p{
     color: #666;
     background-image: url("../img/bar.png");
     background-repeat: no-repeat;
@@ -33,7 +30,7 @@
     padding: 10px 0 0 14px;
 }
 
-#picture-menu li:hover{
+#picture-menu p:hover{
     color: deeppink;
     opacity: 0.5;
 }
@@ -103,9 +100,6 @@
     font-weight: 300;
 }
 /* 照片墙 */
-#picture-index{
-    margin: 120px 80px 60px 180px;
-}
 #image-wall{
     display: none;
 }
@@ -175,4 +169,9 @@
     height: 80%;
     display: inline-block;
 }
-
+#page{
+    color: white;
+    position: relative;
+    bottom: 20px;
+    left: 88%;
+}

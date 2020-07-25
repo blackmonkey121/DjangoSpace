@@ -9,12 +9,11 @@ Monkey的个人站点
 {% block css %}
     <link rel="stylesheet" href="{% static '/css/home.css' %}">
 
-    <!--    Carousel-->
-    <link rel="stylesheet" href="{% static '/css/bootstrap.css' %}">
-    <link rel="stylesheet" href="{% static '/css/animate.css' %}">
+    <!-- Carousel -->
     <link rel="stylesheet" href="{% static '/css/slick.css' %}">
     <link rel="stylesheet" href="{% static '/css/index.css' %}">
     <link rel="stylesheet" href="{% static '/css/jquery.fullPage.css' %}">
+    <!-- icon -->
     <link rel="stylesheet" href="{% static 'font-awesome-4.7.0/css/font-awesome.min.css' %}">
 
 {% endblock %}
@@ -114,7 +113,6 @@ Monkey的个人站点
             <a style="text-decoration:none;" href="{% url 'picture:album' %}"><span id="picture-btn" class="page-btn">相册</span></a>
 
             <div id="picture-area" class="clearfix">
-
 
                 {% for album in album_list %}
                     <div class="img">

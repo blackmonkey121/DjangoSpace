@@ -3,14 +3,14 @@
 {% block main-left %}
     <div id="picture-index">
 
-        <ul id="picture-menu">
+        <div id="picture-menu">
             {% for album in album_list %}
-                <li class="picture-line">
-                    <a href=""><span>{{ album.name }}{{ album.imgs_count }}</span></a>
-                </li>
+                <a href="{% url 'picture:album_detail' album.id %}"><p class="picture-line">
+                    <span>{{ album.name }}{{ album.imgs_count }}</span>
+                </p></a>
             {% endfor %}
 
-        </ul>
+        </div>
 
     </div>
     <span id="chen"></span>

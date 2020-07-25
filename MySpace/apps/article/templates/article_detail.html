@@ -77,28 +77,18 @@
                 {% endfor %}
             </ul>
         </div>
-
-
     </div>
-
-
 {% endblock %}
-
 
 {% block main-center %}
     <!-- 附加数据 -->
     <div id="page_data" data-article_id="{{ article.id }}"></div>
     {% csrf_token %}
-
-
     <div id="article-detail">
-
         <div id="article-title">
             {{ article.title }}
         </div>
-
         <div id="article-decoration">
-
             <div id="cookies">
                 <span class="tip c-black b-white">原创</span>
                 <span class="tip c-black b-white">分类</span>
@@ -108,26 +98,18 @@
                     class="tip b-info c-white">{{ article.create_time }}</span>
                 <span class="tip c-black b-white">阅读</span><span
                     class="tip b-warning c-white">{{ article.visit }}</span>
-
             </div>
             <div id="tag" class="float-r">
                 <span class="tip b-info">Tags</span> <i></i>
-
                 {% for tag in tags %}
                     <span class="tag-elem"><a href="{% url 'article:tag' tag.id %}">{{ tag.name }}</a></span> <i></i>
                 {% endfor %}
-
             </div>
-
         </div>
-
         <div id="article-text" class="para">
             {{ article.content_html | safe }}
-
         </div>
-
     </div>
-
     <div id="new_comment">
 
 
@@ -139,7 +121,6 @@
     </div>
 
     <div id="comment">
-
         {% for comment in comment_list %}
             <div class="cmt_line">
                 <div class="cmt_avatar">
